@@ -3,11 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unicorn - Магазин одежды и обуви</title>
+    <title>UNICORN Shop - Магазин одежды и обуви</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* CSS Variables */
         :root {
             --primary: #8A2BE2;
             --primary-light: #9D4EDD;
@@ -23,7 +22,6 @@
             --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* Reset & Base */
         * {
             margin: 0;
             padding: 0;
@@ -413,7 +411,7 @@
             z-index: 1;
         }
 
-        /* Categories Grid with Images */
+        /* Categories Grid */
         .categories-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
@@ -441,7 +439,6 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            background: linear-gradient(45deg, var(--light), var(--light-gray));
         }
 
         .category-content {
@@ -475,29 +472,6 @@
             border-radius: 12px;
             font-size: 10px;
             font-weight: 600;
-        }
-
-        /* Section Header */
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .section-title {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .section-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-size: 14px;
-            font-weight: 500;
-            display: flex;
-            align-items: center;
-            gap: 4px;
         }
 
         /* Products Grid */
@@ -649,61 +623,10 @@
         }
 
         .add-to-cart.added {
-            background: var(--success);
+            background: #4CAF50;
         }
 
-        /* Category Page */
-        .category-header {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            padding: 40px 20px 20px;
-            margin: -20px -20px 20px;
-            border-radius: 0 0 var(--radius) var(--radius);
-        }
-
-        .category-header h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .category-header p {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .subcategories {
-            display: flex;
-            gap: 8px;
-            overflow-x: auto;
-            padding: 16px 0;
-            margin-bottom: 24px;
-            -webkit-overflow-scrolling: touch;
-        }
-
-        .subcategory {
-            padding: 10px 20px;
-            background: var(--light);
-            border-radius: 25px;
-            white-space: nowrap;
-            font-size: 14px;
-            color: var(--dark);
-            text-decoration: none;
-            transition: var(--transition);
-            border: 1px solid var(--border);
-        }
-
-        .subcategory.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        .subcategory:hover {
-            background: var(--light-gray);
-        }
-
-        /* Favorites Page */
+        /* Empty States */
         .empty-state {
             text-align: center;
             padding: 60px 20px;
@@ -730,242 +653,6 @@
             margin-right: auto;
         }
 
-        /* Cart Page */
-        .cart-item {
-            display: flex;
-            gap: 16px;
-            padding: 16px;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin-bottom: 16px;
-        }
-
-        .cart-item-image {
-            width: 100px;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 8px;
-            background: linear-gradient(45deg, var(--light), var(--light-gray));
-        }
-
-        .cart-item-details {
-            flex: 1;
-        }
-
-        .cart-item-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
-
-        .cart-item-size {
-            font-size: 12px;
-            color: var(--gray);
-            margin-bottom: 8px;
-        }
-
-        .cart-item-actions {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-top: 12px;
-        }
-
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: var(--light);
-            border-radius: 20px;
-            padding: 4px 12px;
-        }
-
-        .quantity-btn {
-            width: 24px;
-            height: 24px;
-            border-radius: 50%;
-            border: none;
-            background: white;
-            color: var(--dark);
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-
-        .quantity-btn:hover {
-            background: var(--light-gray);
-        }
-
-        .quantity {
-            min-width: 20px;
-            text-align: center;
-            font-weight: 600;
-        }
-
-        .remove-btn {
-            color: var(--secondary);
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 14px;
-            padding: 8px;
-            border-radius: 4px;
-            transition: var(--transition);
-        }
-
-        .remove-btn:hover {
-            background: rgba(255, 107, 107, 0.1);
-        }
-
-        .cart-total {
-            background: white;
-            border-radius: var(--radius);
-            padding: 24px;
-            box-shadow: var(--shadow);
-            margin-top: 24px;
-        }
-
-        .total-row {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 12px;
-        }
-
-        .total-row:last-child {
-            font-weight: 700;
-            font-size: 18px;
-            border-top: 1px solid var(--border);
-            padding-top: 12px;
-            margin-top: 12px;
-        }
-
-        .checkout-btn {
-            width: 100%;
-            padding: 16px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-top: 16px;
-        }
-
-        .checkout-btn:hover {
-            background: var(--primary-light);
-            transform: translateY(-2px);
-        }
-
-        /* Profile Page */
-        .profile-header {
-            text-align: center;
-            padding: 40px 20px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            margin: -20px -20px 20px;
-            border-radius: 0 0 var(--radius) var(--radius);
-        }
-
-        .profile-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: white;
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 32px;
-            font-weight: 600;
-            margin: 0 auto 16px;
-            border: 4px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .profile-name {
-            font-size: 24px;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .profile-phone {
-            opacity: 0.9;
-            font-size: 14px;
-        }
-
-        .profile-stats {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .stat-item {
-            text-align: center;
-            padding: 16px;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-        }
-
-        .stat-value {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 4px;
-        }
-
-        .stat-label {
-            font-size: 12px;
-            color: var(--gray);
-        }
-
-        .profile-menu {
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            overflow: hidden;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px;
-            text-decoration: none;
-            color: var(--dark);
-            border-bottom: 1px solid var(--border);
-            transition: var(--transition);
-        }
-
-        .menu-item:last-child {
-            border-bottom: none;
-        }
-
-        .menu-item:hover {
-            background: var(--light);
-        }
-
-        .menu-icon {
-            color: var(--primary);
-            font-size: 20px;
-            margin-right: 16px;
-        }
-
-        .menu-text {
-            flex: 1;
-            font-size: 16px;
-        }
-
-        .menu-value {
-            color: var(--gray);
-            font-size: 14px;
-        }
-
         /* Modal */
         .modal-overlay {
             position: fixed;
@@ -973,7 +660,7 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0,0,0,0.5);
             display: none;
             justify-content: center;
             align-items: center;
@@ -1012,135 +699,6 @@
             }
         }
 
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid var(--border);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-title {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 24px;
-            color: var(--gray);
-            cursor: pointer;
-            padding: 0;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        .close-modal:hover {
-            background: var(--light);
-            color: var(--dark);
-        }
-
-        .modal-body {
-            padding: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-
-        .form-input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
-            transition: var(--transition);
-        }
-
-        .form-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.1);
-        }
-
-        .form-select {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            font-size: 16px;
-            background: white;
-            cursor: pointer;
-        }
-
-        .promo-code {
-            display: flex;
-            gap: 8px;
-        }
-
-        .promo-input {
-            flex: 1;
-        }
-
-        .apply-promo {
-            padding: 12px 24px;
-            background: var(--primary);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .apply-promo:hover {
-            background: var(--primary-light);
-        }
-
-        /* Active Page Styles */
-        .page {
-            display: none;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .page.active {
-            display: block;
-        }
-
-        /* Loading */
-        .loading {
-            text-align: center;
-            padding: 40px;
-            color: var(--gray);
-        }
-
-        .spinner {
-            width: 40px;
-            height: 40px;
-            border: 3px solid var(--light);
-            border-top-color: var(--primary);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 16px;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Notifications */
         .notification {
             position: fixed;
             bottom: 80px;
@@ -1161,66 +719,12 @@
             opacity: 1;
         }
 
-        /* User Link */
-        .user-link {
-            display: inline-block;
-            background: var(--light);
-            padding: 8px 16px;
-            border-radius: 20px;
-            font-size: 12px;
-            color: var(--gray);
-            margin-top: 8px;
-            text-decoration: none;
-            transition: var(--transition);
+        .page {
+            display: none;
         }
 
-        .user-link:hover {
-            background: var(--light-gray);
-            color: var(--dark);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .search-container {
-                display: none;
-            }
-            
-            .profile-stats {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .admin-toggle {
-                display: flex;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .products-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .categories-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 6px;
-            height: 6px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--light);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--gray);
-            border-radius: 3px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--dark);
+        .page.active {
+            display: block;
         }
     </style>
 </head>
@@ -1246,15 +750,10 @@
             <input type="text" class="admin-input" id="categoryName" placeholder="Название категории">
             <input type="text" class="admin-input" id="categoryImage" placeholder="URL картинки">
             <button class="admin-btn" id="addCategory">Добавить категорию</button>
-            <button class="admin-btn" id="updateCategory">Обновить категорию</button>
-            <button class="admin-btn delete" id="deleteCategory">Удалить категорию</button>
         </div>
         
         <div class="admin-section">
             <h3><i class="fas fa-box"></i> Товары</h3>
-            <select class="admin-input" id="productSelect">
-                <option value="">Выберите товар</option>
-            </select>
             <input type="text" class="admin-input" id="productName" placeholder="Название товара">
             <input type="number" class="admin-input" id="productPrice" placeholder="Цена">
             <select class="admin-input" id="productCategory">
@@ -1262,16 +761,6 @@
             </select>
             <input type="text" class="admin-input" id="productImage" placeholder="URL картинки">
             <button class="admin-btn" id="addProduct">Добавить товар</button>
-            <button class="admin-btn" id="updateProduct">Обновить товар</button>
-            <button class="admin-btn delete" id="deleteProduct">Удалить товар</button>
-        </div>
-        
-        <div class="admin-section">
-            <h3><i class="fas fa-percentage"></i> Промокоды</h3>
-            <input type="text" class="admin-input" id="promoCode" placeholder="Код промокода">
-            <input type="number" class="admin-input" id="promoDiscount" placeholder="Скидка %">
-            <input type="number" class="admin-input" id="promoDays" placeholder="Действует дней">
-            <button class="admin-btn" id="addPromo">Создать промокод</button>
         </div>
         
         <div class="admin-section">
@@ -1286,7 +775,7 @@
         <div class="header-container">
             <a href="#home" class="logo">
                 <span class="logo-icon">🦄</span>
-                <span class="logo-text">Unicorn</span>
+                <span class="logo-text">UNICORN</span>
             </a>
             
             <div class="search-container">
@@ -1336,7 +825,6 @@
         <!-- Home Page -->
         <div id="home" class="page active">
             <div class="container">
-                <!-- Banner -->
                 <div class="banner">
                     <div class="banner-content">
                         <div class="banner-badge">🔥 Горячая распродажа</div>
@@ -1350,30 +838,20 @@
                     <div class="banner-unicorn">🦄</div>
                 </div>
 
-                <!-- Categories -->
                 <div class="section-header">
                     <h2 class="section-title">Категории</h2>
-                    <a href="#categories" class="section-link" data-page="categories">
-                        Все категории
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
                 </div>
 
                 <div class="categories-grid" id="mainCategories">
-                    <!-- Categories will be loaded here -->
+                    <!-- Categories loaded by JS -->
                 </div>
 
-                <!-- Popular Products -->
                 <div class="section-header">
                     <h2 class="section-title">Популярные товары</h2>
-                    <a href="#categories" class="section-link" data-page="categories">
-                        Все товары
-                        <i class="fas fa-arrow-right"></i>
-                    </a>
                 </div>
 
                 <div class="products-grid" id="popularProducts">
-                    <!-- Products will be loaded here -->
+                    <!-- Products loaded by JS -->
                 </div>
             </div>
         </div>
@@ -1387,15 +865,15 @@
                 </div>
 
                 <div class="subcategories" id="categoryTabs">
-                    <!-- Category tabs will be loaded here -->
+                    <!-- Category tabs loaded by JS -->
                 </div>
 
                 <div class="categories-grid" id="subcategoriesGrid">
-                    <!-- Subcategories will be loaded here -->
+                    <!-- Subcategories loaded by JS -->
                 </div>
 
                 <div class="products-grid" id="categoryProducts">
-                    <!-- Category products will be loaded here -->
+                    <!-- Category products loaded by JS -->
                 </div>
             </div>
         </div>
@@ -1403,74 +881,16 @@
         <!-- Favorites Page -->
         <div id="favorites" class="page">
             <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Избранные товары</h2>
-                    <div>
-                        <button class="subcategory active" style="margin-right: 8px;" id="tabProducts">Товары</button>
-                        <button class="subcategory" id="tabCollections">Подборки</button>
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <i class="far fa-heart"></i>
                     </div>
+                    <h3 class="empty-title">Избранные товары</h3>
+                    <p class="empty-text">Нажимайте на сердечки рядом с товарами, чтобы быстро находить то, что вам понравилось.</p>
                 </div>
 
-                <div id="favoritesContent">
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="far fa-heart"></i>
-                        </div>
-                        <h3 class="empty-title">Избранные товары</h3>
-                        <p class="empty-text">Нажимайте на сердечки рядом с товарами, чтобы быстро находить то, что вам понравилось.</p>
-                    </div>
-
-                    <div class="products-grid" id="favoritesGrid" style="display: none;">
-                        <!-- Favorite products will be loaded here -->
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Cart Page -->
-        <div id="cart" class="page">
-            <div class="container">
-                <div class="section-header">
-                    <h2 class="section-title">Корзина</h2>
-                </div>
-
-                <div id="cartContent">
-                    <div class="empty-state">
-                        <div class="empty-icon">
-                            <i class="fas fa-shopping-bag"></i>
-                        </div>
-                        <h3 class="empty-title">В корзине пока ничего нет</h3>
-                        <p class="empty-text">Самое время наполнить её!</p>
-                        <button class="add-to-cart" onclick="switchPage('home')">
-                            <i class="fas fa-store"></i>
-                            Перейти к покупкам
-                        </button>
-                    </div>
-
-                    <div id="cartItems" style="display: none;">
-                        <!-- Cart items will be loaded here -->
-                        <div class="cart-total">
-                            <div class="total-row">
-                                <span>Товары (3)</span>
-                                <span>15 450 ₽</span>
-                            </div>
-                            <div class="total-row">
-                                <span>Доставка</span>
-                                <span>Бесплатно</span>
-                            </div>
-                            <div class="total-row">
-                                <span>Скидка</span>
-                                <span style="color: var(--secondary);">-2 500 ₽</span>
-                            </div>
-                            <div class="total-row">
-                                <span>Итого</span>
-                                <span>12 950 ₽</span>
-                            </div>
-                            <button class="checkout-btn" onclick="openCheckoutModal()">
-                                Оформить заказ
-                            </button>
-                        </div>
-                    </div>
+                <div class="products-grid" id="favoritesGrid" style="display: none;">
+                    <!-- Favorite products loaded by JS -->
                 </div>
             </div>
         </div>
@@ -1482,28 +902,6 @@
                     <div class="profile-avatar" id="profileAvatar">?</div>
                     <h2 class="profile-name" id="profileName">Гость</h2>
                     <p class="profile-phone" id="profilePhone">Не авторизован</p>
-                    <a href="#" class="user-link" id="profileShareLink" target="_blank">
-                        <i class="fas fa-share-alt"></i> Поделиться профилем
-                    </a>
-                </div>
-
-                <div class="profile-stats">
-                    <div class="stat-item">
-                        <div class="stat-value" id="statOrders">0</div>
-                        <div class="stat-label">Заказы</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="statReviews">0</div>
-                        <div class="stat-label">Отзывы</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="statFavorites">0</div>
-                        <div class="stat-label">Избранное</div>
-                    </div>
-                    <div class="stat-item">
-                        <div class="stat-value" id="statViewed">0</div>
-                        <div class="stat-label">Просмотренные</div>
-                    </div>
                 </div>
 
                 <div class="profile-menu">
@@ -1524,185 +922,16 @@
                         <span class="menu-text">Пригласить друга</span>
                         <span class="menu-value">+500 ₽</span>
                     </a>
-                    <a href="#" class="menu-item" onclick="openSupportModal()">
-                        <i class="fas fa-headset menu-icon"></i>
-                        <span class="menu-text">Поддержка</span>
-                    </a>
                 </div>
             </div>
         </div>
     </main>
 
-    <!-- Sale Modal -->
-    <div class="modal-overlay" id="saleModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">🔥 Скидка 50% на всё!</h3>
-                <button class="close-modal" onclick="closeSaleModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align: center; margin-bottom: 24px;">
-                    <div style="font-size: 48px; color: var(--secondary); margin-bottom: 16px;">50%</div>
-                    <h4 style="font-size: 20px; margin-bottom: 12px;">Специальное предложение!</h4>
-                    <p style="color: var(--gray); margin-bottom: 24px;">
-                        Только до конца недели. Скидка применяется автоматически при добавлении товаров в корзину.
-                    </p>
-                </div>
-                
-                <h5 style="font-size: 16px; margin-bottom: 16px;">Товары со скидкой:</h5>
-                <div id="saleProducts">
-                    <!-- Sale products will be loaded here -->
-                </div>
-                
-                <button class="checkout-btn" style="margin-top: 24px;" onclick="closeSaleModal(); switchPage('home');">
-                    <i class="fas fa-shopping-cart"></i>
-                    Перейти к покупкам
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Checkout Modal -->
-    <div class="modal-overlay" id="checkoutModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Оформление заказа</h3>
-                <button class="close-modal" onclick="closeCheckoutModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Имя и фамилия</label>
-                    <input type="text" class="form-input" placeholder="Иван Иванов" id="checkoutName">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Номер телефона</label>
-                    <input type="tel" class="form-input" placeholder="+7 (900) 000-00-00" id="checkoutPhone">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Email</label>
-                    <input type="email" class="form-input" placeholder="example@mail.ru" id="checkoutEmail">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Адрес доставки</label>
-                    <input type="text" class="form-input" placeholder="г. Москва, ул. Примерная, д. 1, кв. 1" id="checkoutAddress">
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Способ доставки</label>
-                    <select class="form-select" id="checkoutDelivery">
-                        <option>Курьерская доставка</option>
-                        <option>Почта России</option>
-                        <option>СДЭК</option>
-                        <option>Пункт выдачи</option>
-                    </select>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Промокод</label>
-                    <div class="promo-code">
-                        <input type="text" class="form-input promo-input" placeholder="Введите промокод" id="promoCodeInput">
-                        <button class="apply-promo" onclick="applyPromoCode()">Применить</button>
-                    </div>
-                </div>
-                
-                <div style="background: var(--light); padding: 16px; border-radius: 8px; margin: 24px 0;">
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span>Товары (3)</span>
-                        <span>15 450 ₽</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span>Доставка</span>
-                        <span>Бесплатно</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
-                        <span>Скидка</span>
-                        <span style="color: var(--secondary);">-2 500 ₽</span>
-                    </div>
-                    <div style="display: flex; justify-content: space-between; font-weight: 700; font-size: 18px;">
-                        <span>Итого</span>
-                        <span>12 950 ₽</span>
-                    </div>
-                </div>
-                
-                <button class="checkout-btn" onclick="placeOrder()">
-                    <i class="fas fa-lock"></i>
-                    Подтвердить заказ
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Phone Modal -->
-    <div class="modal-overlay" id="phoneModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Добавить номер телефона</h3>
-                <button class="close-modal" onclick="closePhoneModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div style="text-align: center; margin-bottom: 24px;">
-                    <div style="font-size: 48px; color: var(--primary); margin-bottom: 16px;">
-                        <i class="fas fa-phone-alt"></i>
-                    </div>
-                    <h4 style="font-size: 20px; margin-bottom: 12px;">Старые заказы появятся автоматически</h4>
-                    <p style="color: var(--gray);">
-                        После добавления номера телефона ваши предыдущие заказы будут доступны в приложении
-                    </p>
-                </div>
-                
-                <div class="form-group">
-                    <label class="form-label">Номер телефона</label>
-                    <input type="tel" class="form-input" placeholder="+7 (900) 000-00-00" id="phoneInput">
-                </div>
-                
-                <button class="checkout-btn" onclick="savePhoneNumber()">
-                    Сохранить номер
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Address Modal -->
-    <div class="modal-overlay" id="addressModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Данные доставки</h3>
-                <button class="close-modal" onclick="closeAddressModal()">&times;</button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Город</label>
-                    <input type="text" class="form-input" placeholder="Москва" id="addressCity">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Улица, дом, квартира</label>
-                    <input type="text" class="form-input" placeholder="ул. Примерная, д. 1, кв. 1" id="addressStreet">
-                </div>
-                <div class="form-group">
-                    <label class="form-label">Индекс</label>
-                    <input type="text" class="form-input" placeholder="123456" id="addressIndex">
-                </div>
-                <button class="checkout-btn" onclick="saveAddress()">
-                    Сохранить адрес
-                </button>
-            </div>
-        </div>
-    </div>
-
     <!-- Notification -->
     <div class="notification" id="notification"></div>
 
     <script>
-        // Admin ID (Telegram ID)
-        const ADMIN_IDS = ['6644058285']; // Ваш Telegram ID
-        let currentUserId = null;
-        let isAdmin = false;
-        let userData = {};
-        
-        // Sample Data with Images
+        // Fixed data with working images
         const defaultCategories = {
             men: {
                 id: "men",
@@ -1711,12 +940,7 @@
                 image: "https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
                 subcategories: [
                     { id: "outerwear", name: "Верхняя одежда", image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 234 },
-                    { id: "t-shirts", name: "Футболки", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 456 },
-                    { id: "sweatshirts", name: "Свитшоты", image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 189 },
-                    { id: "hoodies", name: "Худи", image: "https://images.unsplash.com/photo-1520256862855-398228c41684?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 156 },
-                    { id: "caps", name: "Кепки", image: "https://images.unsplash.com/photo-1533050487297-09b450131914?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 78 },
-                    { id: "hats", name: "Шапки", image: "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 45 },
-                    { id: "jeans", name: "Джинсы", image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 287 }
+                    { id: "t-shirts", name: "Футболки", image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 456 }
                 ]
             },
             women: {
@@ -1725,11 +949,8 @@
                 description: "Женская одежда и обувь",
                 image: "https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
                 subcategories: [
-                    { id: "outerwear", name: "Верхняя одежда", image: "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 312 },
-                    { id: "t-shirts", name: "Футболки", image: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 567 },
-                    { id: "dresses", name: "Платья", image: "https://images.unsplash.com/photo-1567095761054-7a02e69e5c43?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 234 },
-                    { id: "skirts", name: "Юбки", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 189 },
-                    { id: "jeans", name: "Джинсы", image: "https://images.unsplash.com/photo-1582418702059-97ebafb35d09?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 345 }
+                    { id: "dresses", name: "Платья", image: "https://images.unsplash.com/photo-1567095761054-7a02e69e5c43?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 312 },
+                    { id: "skirts", name: "Юбки", image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 189 }
                 ]
             },
             shoes: {
@@ -1738,11 +959,8 @@
                 description: "Обувь для всех",
                 image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
                 subcategories: [
-                    { id: "sneakers", name: "Кроссовки и кеды", image: "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 456 },
-                    { id: "boots", name: "Ботинки", image: "https://images.unsplash.com/photo-1528259104435-8e69b1d37d4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 189 },
-                    { id: "sports", name: "Обувь для спорта", image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 234 },
-                    { id: "slippers", name: "Тапки", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 89 },
-                    { id: "boots-women", name: "Сапоги", image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=60", count: 156 }
+                    { id: "sneakers", name: "Кроссовки", image: "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 456 },
+                    { id: "boots", name: "Ботинки", image: "https://images.unsplash.com/photo-1528259104435-8e69b1d37d4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80", count: 189 }
                 ]
             }
         };
@@ -1750,14 +968,13 @@
         const defaultProducts = [
             {
                 id: 1,
-                name: "Кожаные кроссовки Nike Air Force",
+                name: "Кроссовки Nike Air Force",
                 brand: "Nike",
                 price: 12990,
                 oldPrice: 15990,
                 discount: 19,
                 category: "shoes",
                 subcategory: "sneakers",
-                gender: "unisex",
                 image: "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
             },
             {
@@ -1769,80 +986,29 @@
                 discount: 20,
                 category: "men",
                 subcategory: "jeans",
-                gender: "men",
                 image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
             },
             {
                 id: 3,
-                name: "Куртка зимняя Canada Goose",
+                name: "Куртка зимняя",
                 brand: "Canada Goose",
                 price: 89990,
                 oldPrice: null,
                 discount: 0,
                 category: "men",
                 subcategory: "outerwear",
-                gender: "unisex",
                 image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
             },
             {
                 id: 4,
-                name: "Футболка Basic Cotton",
+                name: "Футболка Basic",
                 brand: "Uniqlo",
                 price: 1990,
                 oldPrice: 2490,
                 discount: 20,
                 category: "men",
                 subcategory: "t-shirts",
-                gender: "unisex",
                 image: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 5,
-                name: "Кроссовки Adidas Ultraboost",
-                brand: "Adidas",
-                price: 14990,
-                oldPrice: 17990,
-                discount: 17,
-                category: "shoes",
-                subcategory: "sports",
-                gender: "unisex",
-                image: "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 6,
-                name: "Свитшот Oversize",
-                brand: "H&M",
-                price: 3990,
-                oldPrice: 4990,
-                discount: 20,
-                category: "women",
-                subcategory: "sweatshirts",
-                gender: "women",
-                image: "https://images.unsplash.com/photo-1576566588028-4147f3842f27?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 7,
-                name: "Ботинки Timberland",
-                brand: "Timberland",
-                price: 17990,
-                oldPrice: 19990,
-                discount: 10,
-                category: "shoes",
-                subcategory: "boots",
-                gender: "men",
-                image: "https://images.unsplash.com/photo-1528259104435-8e69b1d37d4d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-            },
-            {
-                id: 8,
-                name: "Шапка вязаная",
-                brand: "Zara",
-                price: 2490,
-                oldPrice: null,
-                discount: 0,
-                category: "women",
-                subcategory: "accessories",
-                gender: "women",
-                image: "https://images.unsplash.com/photo-1576871337632-b9aef4c17ab9?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
             }
         ];
 
@@ -1850,10 +1016,8 @@
         let categories = JSON.parse(localStorage.getItem('categories')) || defaultCategories;
         let products = JSON.parse(localStorage.getItem('products')) || defaultProducts;
         let currentCategory = 'men';
-        let promocodes = JSON.parse(localStorage.getItem('promocodes')) || {};
-        let cart = JSON.parse(localStorage.getItem('cart')) || {};
-        let favorites = JSON.parse(localStorage.getItem('favorites')) || {};
-        let users = JSON.parse(localStorage.getItem('users')) || {};
+        let currentUserId = getUserIdFromUrl();
+        let userData = getUserData(currentUserId);
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -1861,123 +1025,46 @@
         });
 
         function initApp() {
-            // Get user ID from URL or generate new
-            getUserIdFromUrl();
-            
-            // Initialize user data
-            initUserData();
-            
-            // Load popular products
             loadMainCategories();
             loadPopularProducts();
-            
-            // Setup navigation
             setupNavigation();
-            
-            // Setup category tabs
             setupCategoryTabs();
-            
-            // Update cart badge
             updateCartBadge();
-            
-            // Setup event listeners
-            setupEventListeners();
-            
-            // Setup admin panel
+            updateProfileUI();
             setupAdminPanel();
-            
-            // Check if admin
-            checkAdminStatus();
         }
 
         function getUserIdFromUrl() {
             const hash = window.location.hash;
             if (hash.includes('profile-')) {
-                currentUserId = hash.split('profile-')[1];
+                return hash.split('profile-')[1];
             } else {
-                // Generate random user ID if not in URL
-                currentUserId = 'user_' + Math.random().toString(36).substr(2, 9);
-                window.location.hash = `profile-${currentUserId}`;
+                const userId = 'user_' + Math.random().toString(36).substr(2, 9);
+                window.location.hash = `profile-${userId}`;
+                return userId;
             }
-            
-            // Update profile link
-            updateProfileLink();
         }
 
-        function initUserData() {
-            if (!users[currentUserId]) {
-                users[currentUserId] = {
-                    id: currentUserId,
-                    name: `Пользователь ${currentUserId.substr(0, 4)}`,
+        function getUserData(userId) {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            if (!users[userId]) {
+                users[userId] = {
+                    id: userId,
+                    name: `Пользователь ${userId.substr(0, 4)}`,
                     phone: null,
-                    address: null,
                     favorites: [],
-                    cart: [],
-                    orders: [],
-                    viewed: [],
-                    createdAt: new Date().toISOString()
+                    cart: []
                 };
                 localStorage.setItem('users', JSON.stringify(users));
             }
-            
-            userData = users[currentUserId];
-            
-            // Update UI
-            updateProfileUI();
+            return users[userId];
         }
 
         function updateProfileUI() {
-            const avatar = document.getElementById('profileAvatar');
-            const name = document.getElementById('profileName');
-            const phone = document.getElementById('profilePhone');
-            
-            if (avatar) {
-                avatar.textContent = userData.name.charAt(0).toUpperCase();
-            }
-            
-            if (name) {
-                name.textContent = userData.name;
-            }
-            
-            if (phone) {
-                phone.textContent = userData.phone || 'Не авторизован';
-            }
-            
-            // Update stats
-            document.getElementById('statOrders').textContent = userData.orders?.length || 0;
-            document.getElementById('statFavorites').textContent = userData.favorites?.length || 0;
-            document.getElementById('statViewed').textContent = userData.viewed?.length || 0;
-            
-            // Update header avatar
-            const headerAvatar = document.getElementById('userAvatar');
-            if (headerAvatar) {
-                headerAvatar.textContent = userData.name.charAt(0).toUpperCase();
-            }
-        }
-
-        function updateProfileLink() {
-            const link = window.location.origin + window.location.pathname + '#profile-' + currentUserId;
-            const linkElement = document.getElementById('profileShareLink');
-            const profileLinkInput = document.getElementById('profileLink');
-            
-            if (linkElement) {
-                linkElement.href = link;
-            }
-            
-            if (profileLinkInput) {
-                profileLinkInput.value = link;
-            }
-        }
-
-        function checkAdminStatus() {
-            // In real app, this would check against server
-            // For demo, we'll check if currentUserId matches admin ID
-            isAdmin = ADMIN_IDS.includes(currentUserId);
-            
-            if (isAdmin) {
-                document.getElementById('adminToggle').style.display = 'flex';
-                showNotification('Админ-панель доступна');
-            }
+            document.getElementById('profileAvatar').textContent = userData.name.charAt(0).toUpperCase();
+            document.getElementById('profileName').textContent = userData.name;
+            document.getElementById('profilePhone').textContent = userData.phone || 'Не авторизован';
+            document.getElementById('userAvatar').textContent = userData.name.charAt(0).toUpperCase();
         }
 
         function setupAdminPanel() {
@@ -1986,263 +1073,189 @@
             const adminOverlay = document.getElementById('adminOverlay');
             const closeAdmin = document.getElementById('closeAdmin');
             
-            adminToggle.addEventListener('click', function() {
+            // Only show for admin (replace with your logic)
+            if (currentUserId === '6644058285') {
+                adminToggle.style.display = 'flex';
+            }
+            
+            adminToggle.addEventListener('click', () => {
                 adminPanel.classList.add('active');
                 adminOverlay.classList.add('active');
-                loadAdminData();
             });
             
-            closeAdmin.addEventListener('click', function() {
+            closeAdmin.addEventListener('click', () => {
                 adminPanel.classList.remove('active');
                 adminOverlay.classList.remove('active');
             });
             
-            adminOverlay.addEventListener('click', function() {
+            adminOverlay.addEventListener('click', () => {
                 adminPanel.classList.remove('active');
                 adminOverlay.classList.remove('active');
             });
-            
-            // Admin functionality
-            setupAdminFunctionality();
         }
 
-        function loadAdminData() {
-            // Load categories to select
-            const categorySelect = document.getElementById('categorySelect');
-            const productCategorySelect = document.getElementById('productCategory');
-            
-            categorySelect.innerHTML = '<option value="">Выберите категорию</option>';
-            productCategorySelect.innerHTML = '<option value="">Категория товара</option>';
+        function loadMainCategories() {
+            const container = document.getElementById('mainCategories');
+            container.innerHTML = '';
             
             Object.keys(categories).forEach(catId => {
                 const cat = categories[catId];
-                const option1 = document.createElement('option');
-                option1.value = catId;
-                option1.textContent = cat.name;
-                categorySelect.appendChild(option1);
-                
-                const option2 = document.createElement('option');
-                option2.value = catId;
-                option2.textContent = cat.name;
-                productCategorySelect.appendChild(option2);
-            });
-            
-            // Load products to select
-            const productSelect = document.getElementById('productSelect');
-            productSelect.innerHTML = '<option value="">Выберите товар</option>';
-            
-            products.forEach(product => {
-                const option = document.createElement('option');
-                option.value = product.id;
-                option.textContent = product.name;
-                productSelect.appendChild(option);
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.innerHTML = `
+                    <img src="${cat.image}" alt="${cat.name}" class="category-image">
+                    <div class="category-content">
+                        <h3 class="category-title">${cat.name}</h3>
+                        <p class="category-count">${cat.subcategories.length} подкатегорий</p>
+                    </div>
+                `;
+                card.addEventListener('click', () => {
+                    openCategory(catId);
+                });
+                container.appendChild(card);
             });
         }
 
-        function setupAdminFunctionality() {
-            // Category management
-            document.getElementById('addCategory').addEventListener('click', function() {
-                const name = document.getElementById('categoryName').value;
-                const image = document.getElementById('categoryImage').value;
-                
-                if (!name) {
-                    showNotification('Введите название категории');
-                    return;
-                }
-                
-                const id = name.toLowerCase().replace(/\s+/g, '_');
-                categories[id] = {
-                    id: id,
-                    name: name,
-                    image: image || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                    description: name,
-                    subcategories: []
-                };
-                
-                localStorage.setItem('categories', JSON.stringify(categories));
-                loadAdminData();
-                loadMainCategories();
-                showNotification(`Категория "${name}" добавлена`);
+        function loadPopularProducts() {
+            const container = document.getElementById('popularProducts');
+            container.innerHTML = '';
+            
+            products.forEach(product => {
+                const isFavorite = userData.favorites?.includes(product.id) || false;
+                const productElement = createProductElement(product, isFavorite);
+                container.appendChild(productElement);
+            });
+        }
+
+        function createProductElement(product, isFavorite) {
+            const div = document.createElement('div');
+            div.className = 'product-card';
+            div.innerHTML = `
+                <img src="${product.image}" alt="${product.name}" class="product-image">
+                <button class="wishlist-btn ${isFavorite ? 'active' : ''}" data-id="${product.id}">
+                    <i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>
+                </button>
+                <div class="product-content">
+                    <div class="product-brand">${product.brand}</div>
+                    <h3 class="product-title">${product.name}</h3>
+                    <div class="product-price">
+                        <span class="current-price">${product.price.toLocaleString()} ₽</span>
+                        ${product.oldPrice ? `<span class="old-price">${product.oldPrice.toLocaleString()} ₽</span>` : ''}
+                        ${product.discount > 0 ? `<span class="discount">-${product.discount}%</span>` : ''}
+                    </div>
+                    <button class="add-to-cart" data-id="${product.id}">
+                        <i class="fas fa-shopping-cart"></i>
+                        В корзину
+                    </button>
+                </div>
+            `;
+            
+            div.querySelector('.wishlist-btn').addEventListener('click', function(e) {
+                e.stopPropagation();
+                toggleFavorite(product.id);
+                this.classList.toggle('active');
+                this.innerHTML = `<i class="${this.classList.contains('active') ? 'fas' : 'far'} fa-heart"></i>`;
             });
             
-            document.getElementById('updateCategory').addEventListener('click', function() {
-                const catId = document.getElementById('categorySelect').value;
-                const name = document.getElementById('categoryName').value;
-                const image = document.getElementById('categoryImage').value;
-                
-                if (!catId || !name) {
-                    showNotification('Выберите категорию и введите название');
-                    return;
-                }
-                
-                categories[catId].name = name;
-                if (image) categories[catId].image = image;
-                
-                localStorage.setItem('categories', JSON.stringify(categories));
-                loadAdminData();
-                loadMainCategories();
-                showNotification(`Категория "${name}" обновлена`);
+            div.querySelector('.add-to-cart').addEventListener('click', function(e) {
+                e.stopPropagation();
+                addToCart(product);
+                this.innerHTML = '<i class="fas fa-check"></i> Добавлено';
+                this.classList.add('added');
+                setTimeout(() => {
+                    this.innerHTML = '<i class="fas fa-shopping-cart"></i> В корзину';
+                    this.classList.remove('added');
+                }, 2000);
             });
             
-            document.getElementById('deleteCategory').addEventListener('click', function() {
-                const catId = document.getElementById('categorySelect').value;
-                
-                if (!catId) {
-                    showNotification('Выберите категорию');
-                    return;
-                }
-                
-                if (confirm(`Удалить категорию "${categories[catId].name}"?`)) {
-                    delete categories[catId];
-                    localStorage.setItem('categories', JSON.stringify(categories));
-                    loadAdminData();
-                    loadMainCategories();
-                    showNotification('Категория удалена');
-                }
-            });
-            
-            // Product management
-            document.getElementById('addProduct').addEventListener('click', function() {
-                const name = document.getElementById('productName').value;
-                const price = parseInt(document.getElementById('productPrice').value);
-                const category = document.getElementById('productCategory').value;
-                const image = document.getElementById('productImage').value;
-                
-                if (!name || !price || !category) {
-                    showNotification('Заполните все поля');
-                    return;
-                }
-                
-                const newProduct = {
-                    id: Date.now(),
-                    name: name,
-                    brand: "Бренд",
-                    price: price,
-                    oldPrice: null,
-                    discount: 0,
-                    category: category,
-                    subcategory: "other",
-                    gender: "unisex",
-                    image: image || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'
-                };
-                
-                products.push(newProduct);
-                localStorage.setItem('products', JSON.stringify(products));
-                loadAdminData();
-                showNotification(`Товар "${name}" добавлен`);
-            });
-            
-            // Promocode management
-            document.getElementById('addPromo').addEventListener('click', function() {
-                const code = document.getElementById('promoCode').value;
-                const discount = parseInt(document.getElementById('promoDiscount').value);
-                const days = parseInt(document.getElementById('promoDays').value);
-                
-                if (!code || !discount || !days) {
-                    showNotification('Заполните все поля');
-                    return;
-                }
-                
-                const expires = new Date();
-                expires.setDate(expires.getDate() + days);
-                
-                promocodes[code] = {
-                    code: code,
-                    discount: discount,
-                    createdAt: new Date().toISOString(),
-                    expiresAt: expires.toISOString(),
-                    usedBy: []
-                };
-                
-                localStorage.setItem('promocodes', JSON.stringify(promocodes));
-                showNotification(`Промокод "${code}" создан`);
-            });
-            
-            // Copy link
-            document.getElementById('copyLink').addEventListener('click', function() {
-                const linkInput = document.getElementById('profileLink');
-                linkInput.select();
-                document.execCommand('copy');
-                showNotification('Ссылка скопирована');
-            });
-            
-            // Category select change
-            document.getElementById('categorySelect').addEventListener('change', function() {
-                const catId = this.value;
-                if (catId && categories[catId]) {
-                    document.getElementById('categoryName').value = categories[catId].name;
-                    document.getElementById('categoryImage').value = categories[catId].image;
-                }
-            });
-            
-            // Product select change
-            document.getElementById('productSelect').addEventListener('change', function() {
-                const productId = parseInt(this.value);
-                const product = products.find(p => p.id === productId);
-                
-                if (product) {
-                    document.getElementById('productName').value = product.name;
-                    document.getElementById('productPrice').value = product.price;
-                    document.getElementById('productCategory').value = product.category;
-                    document.getElementById('productImage').value = product.image;
-                }
-            });
+            return div;
+        }
+
+        function toggleFavorite(productId) {
+            if (!userData.favorites) userData.favorites = [];
+            const index = userData.favorites.indexOf(productId);
+            if (index > -1) {
+                userData.favorites.splice(index, 1);
+            } else {
+                userData.favorites.push(productId);
+            }
+            saveUserData();
+        }
+
+        function addToCart(product) {
+            if (!userData.cart) userData.cart = [];
+            const existingItem = userData.cart.find(item => item.id === product.id);
+            if (existingItem) {
+                existingItem.quantity += 1;
+            } else {
+                userData.cart.push({...product, quantity: 1});
+            }
+            saveUserData();
+            updateCartBadge();
+            showNotification(`${product.name} добавлен в корзину`);
+        }
+
+        function updateCartBadge() {
+            const totalItems = userData.cart?.reduce((sum, item) => sum + item.quantity, 0) || 0;
+            const badge = document.getElementById('cartBadge');
+            if (badge) {
+                badge.textContent = totalItems;
+                badge.style.display = totalItems > 0 ? 'flex' : 'none';
+            }
+        }
+
+        function saveUserData() {
+            const users = JSON.parse(localStorage.getItem('users')) || {};
+            users[currentUserId] = userData;
+            localStorage.setItem('users', JSON.stringify(users));
         }
 
         function setupNavigation() {
-            // Navigation items
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
-                    // Remove active class from all nav items
                     document.querySelectorAll('.nav-item').forEach(nav => {
                         nav.classList.remove('active');
                     });
-                    
-                    // Add active class to clicked item
                     this.classList.add('active');
                     
-                    // Switch page
                     const pageId = this.getAttribute('data-page');
                     switchPage(pageId);
                 });
             });
 
-            // Header buttons
             document.getElementById('favoritesBtn').addEventListener('click', function() {
                 switchPage('favorites');
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                document.querySelector('.nav-item[data-page="favorites"]').classList.add('active');
             });
 
             document.getElementById('cartBtn').addEventListener('click', function() {
                 switchPage('cart');
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
             });
 
             document.getElementById('profileBtn').addEventListener('click', function() {
                 switchPage('profile');
-                document.querySelectorAll('.nav-item').forEach(nav => nav.classList.remove('active'));
-                document.querySelector('.nav-item[data-page="profile"]').classList.add('active');
+            });
+        }
+
+        function switchPage(pageId) {
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active');
             });
             
-            // Favorites tabs
-            document.getElementById('tabProducts').addEventListener('click', function() {
-                document.querySelectorAll('#favoritesContent .subcategory').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                this.classList.add('active');
-                loadFavorites();
-            });
-            
-            document.getElementById('tabCollections').addEventListener('click', function() {
-                document.querySelectorAll('#favoritesContent .subcategory').forEach(tab => {
-                    tab.classList.remove('active');
-                });
-                this.classList.add('active');
-                showCollections();
-            });
+            const page = document.getElementById(pageId);
+            if (page) {
+                page.classList.add('active');
+                
+                switch(pageId) {
+                    case 'home':
+                        loadMainCategories();
+                        loadPopularProducts();
+                        break;
+                    case 'categories':
+                        loadCategoryPage(currentCategory);
+                        break;
+                }
+            }
         }
 
         function setupCategoryTabs() {
@@ -2263,16 +1276,10 @@
                 
                 tab.addEventListener('click', function(e) {
                     e.preventDefault();
-                    
-                    // Remove active class from all tabs
                     document.querySelectorAll('#categoryTabs .subcategory').forEach(t => {
                         t.classList.remove('active');
                     });
-                    
-                    // Add active class to clicked tab
                     this.classList.add('active');
-                    
-                    // Load category
                     currentCategory = catId;
                     loadCategoryPage(catId);
                 });
@@ -2281,429 +1288,57 @@
             });
         }
 
-        function setupEventListeners() {
-            // Search
-            const searchInput = document.querySelector('.search');
-            searchInput.addEventListener('input', function() {
-                searchProducts(this.value);
-            });
-
-            // Initialize with first category
-            loadCategoryPage(currentCategory);
-        }
-
-        function loadMainCategories() {
-            const container = document.getElementById('mainCategories');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            Object.keys(categories).forEach(catId => {
-                const cat = categories[catId];
-                const card = document.createElement('div');
-                card.className = 'category-card';
-                card.innerHTML = `
-                    <img src="${cat.image}" alt="${cat.name}" class="category-image">
-                    <div class="category-content">
-                        <h3 class="category-title">${cat.name}</h3>
-                        <p class="category-count">${Object.keys(cat.subcategories || {}).length} подкатегорий</p>
-                    </div>
-                `;
-                card.addEventListener('click', () => {
-                    openCategory(catId);
-                });
-                container.appendChild(card);
-            });
-        }
-
         function loadCategoryPage(categoryId) {
             const cat = categories[categoryId];
             if (!cat) return;
             
-            // Update page title
             document.getElementById('categoryPageTitle').textContent = cat.name;
             document.getElementById('categoryPageDesc').textContent = cat.description;
             
-            // Load subcategories
             const subcategoriesGrid = document.getElementById('subcategoriesGrid');
-            if (subcategoriesGrid) {
-                subcategoriesGrid.innerHTML = '';
-                
-                if (cat.subcategories && cat.subcategories.length > 0) {
-                    cat.subcategories.forEach(sub => {
-                        const card = document.createElement('div');
-                        card.className = 'category-card';
-                        card.innerHTML = `
-                            <img src="${sub.image}" alt="${sub.name}" class="category-image">
-                            <div class="category-content">
-                                <h3 class="category-title">${sub.name}</h3>
-                                <p class="category-count">${sub.count} товаров</p>
-                            </div>
-                        `;
-                        card.addEventListener('click', () => {
-                            showNotification(`Открыта подкатегория: ${sub.name}`);
-                        });
-                        subcategoriesGrid.appendChild(card);
-                    });
-                }
-            }
+            subcategoriesGrid.innerHTML = '';
             
-            // Load category products
+            cat.subcategories.forEach(sub => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.innerHTML = `
+                    <img src="${sub.image}" alt="${sub.name}" class="category-image">
+                    <div class="category-content">
+                        <h3 class="category-title">${sub.name}</h3>
+                        <p class="category-count">${sub.count} товаров</p>
+                    </div>
+                `;
+                subcategoriesGrid.appendChild(card);
+            });
+            
             const productsGrid = document.getElementById('categoryProducts');
-            if (productsGrid) {
-                productsGrid.innerHTML = '';
-                
-                // Filter products by category
-                const categoryProducts = products.filter(p => p.category === categoryId);
-                
-                if (categoryProducts.length === 0) {
-                    productsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray);">Товары не найдены</p>';
-                    return;
-                }
-                
-                categoryProducts.forEach(product => {
-                    const isFavorite = userData.favorites?.includes(product.id) || false;
-                    const productElement = createProductElement(product, isFavorite);
-                    productsGrid.appendChild(productElement);
-                });
-            }
-        }
-
-        function loadPopularProducts() {
-            const container = document.getElementById('popularProducts');
-            if (!container) return;
+            productsGrid.innerHTML = '';
             
-            container.innerHTML = '';
-            
-            // Get 8 random products
-            const popularProducts = [...products].sort(() => Math.random() - 0.5).slice(0, 8);
-            
-            popularProducts.forEach(product => {
+            const categoryProducts = products.filter(p => p.category === categoryId);
+            categoryProducts.forEach(product => {
                 const isFavorite = userData.favorites?.includes(product.id) || false;
                 const productElement = createProductElement(product, isFavorite);
-                container.appendChild(productElement);
+                productsGrid.appendChild(productElement);
             });
-        }
-
-        function switchPage(pageId) {
-            // Hide all pages
-            document.querySelectorAll('.page').forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // Show selected page
-            const page = document.getElementById(pageId);
-            if (page) {
-                page.classList.add('active');
-                
-                // Load page content
-                switch(pageId) {
-                    case 'home':
-                        loadMainCategories();
-                        loadPopularProducts();
-                        break;
-                    case 'categories':
-                        loadCategoryPage(currentCategory);
-                        break;
-                    case 'favorites':
-                        loadFavorites();
-                        break;
-                    case 'cart':
-                        loadCart();
-                        break;
-                    case 'profile':
-                        updateProfileUI();
-                        break;
-                }
-            }
         }
 
         function openCategory(category) {
             currentCategory = category;
             switchPage('categories');
-            
-            // Update active tab
             document.querySelectorAll('#categoryTabs .subcategory').forEach(tab => {
                 tab.classList.remove('active');
                 if (tab.dataset.category === category) {
                     tab.classList.add('active');
                 }
             });
-            
-            document.querySelector('.nav-item[data-page="categories"]').click();
-        }
-
-        function createProductElement(product, isFavorite) {
-            const div = document.createElement('div');
-            div.className = 'product-card';
-            div.innerHTML = `
-                <div class="product-image" style="background-image: url('${product.image}'); background-size: cover; background-position: center;">
-                    <button class="wishlist-btn ${isFavorite ? 'active' : ''}" data-id="${product.id}">
-                        <i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>
-                    </button>
-                </div>
-                <div class="product-content">
-                    <div class="product-brand">${product.brand}</div>
-                    <h3 class="product-title">${product.name}</h3>
-                    <div class="product-price">
-                        <span class="current-price">${product.price.toLocaleString()} ₽</span>
-                        ${product.oldPrice ? `<span class="old-price">${product.oldPrice.toLocaleString()} ₽</span>` : ''}
-                        ${product.discount > 0 ? `<span class="discount">-${product.discount}%</span>` : ''}
-                    </div>
-                    <button class="add-to-cart" data-id="${product.id}">
-                        <i class="fas fa-shopping-cart"></i>
-                        В корзину
-                    </button>
-                </div>
-            `;
-            
-            // Add event listeners
-            const wishlistBtn = div.querySelector('.wishlist-btn');
-            wishlistBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                toggleFavorite(product.id);
-                this.classList.toggle('active');
-                this.innerHTML = `<i class="${this.classList.contains('active') ? 'fas' : 'far'} fa-heart"></i>`;
-            });
-            
-            const addToCartBtn = div.querySelector('.add-to-cart');
-            addToCartBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                addToCart(product);
-                this.innerHTML = '<i class="fas fa-check"></i> Добавлено';
-                this.classList.add('added');
-                setTimeout(() => {
-                    this.innerHTML = '<i class="fas fa-shopping-cart"></i> В корзину';
-                    this.classList.remove('added');
-                }, 2000);
-            });
-            
-            // Click on product card
-            div.addEventListener('click', function() {
-                if (!userData.viewed) userData.viewed = [];
-                if (!userData.viewed.includes(product.id)) {
-                    userData.viewed.push(product.id);
-                    saveUserData();
-                }
-                showNotification(`Просмотр товара: ${product.name}`);
-            });
-            
-            return div;
-        }
-
-        function toggleFavorite(productId) {
-            if (!userData.favorites) userData.favorites = [];
-            
-            const index = userData.favorites.indexOf(productId);
-            if (index > -1) {
-                userData.favorites.splice(index, 1);
-            } else {
-                userData.favorites.push(productId);
-            }
-            
-            saveUserData();
-            updateProfileUI();
-            
-            // Update UI if on favorites page
-            if (document.getElementById('favorites').classList.contains('active')) {
-                loadFavorites();
-            }
-        }
-
-        function loadFavorites() {
-            const emptyState = document.querySelector('#favoritesContent .empty-state');
-            const favoritesGrid = document.getElementById('favoritesGrid');
-            
-            if (!userData.favorites || userData.favorites.length === 0) {
-                emptyState.style.display = 'block';
-                favoritesGrid.style.display = 'none';
-                return;
-            }
-            
-            emptyState.style.display = 'none';
-            favoritesGrid.style.display = 'grid';
-            favoritesGrid.innerHTML = '';
-            
-            const favoriteProducts = products.filter(p => userData.favorites?.includes(p.id));
-            
-            if (favoriteProducts.length === 0) {
-                emptyState.style.display = 'block';
-                favoritesGrid.style.display = 'none';
-                return;
-            }
-            
-            favoriteProducts.forEach(product => {
-                const isFavorite = true;
-                const productElement = createProductElement(product, isFavorite);
-                favoritesGrid.appendChild(productElement);
-            });
-        }
-
-        function showCollections() {
-            const favoritesGrid = document.getElementById('favoritesGrid');
-            favoritesGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--gray);">Подборки пока недоступны</p>';
-        }
-
-        function addToCart(product) {
-            if (!userData.cart) userData.cart = [];
-            
-            const existingItem = userData.cart.find(item => item.id === product.id);
-            
-            if (existingItem) {
-                existingItem.quantity += 1;
-            } else {
-                userData.cart.push({
-                    ...product,
-                    quantity: 1
-                });
-            }
-            
-            saveUserData();
-            updateCartBadge();
-            showNotification(`${product.name} добавлен в корзину`);
-        }
-
-        function loadCart() {
-            const emptyState = document.querySelector('#cartContent .empty-state');
-            const cartItems = document.getElementById('cartItems');
-            
-            if (!userData.cart || userData.cart.length === 0) {
-                emptyState.style.display = 'block';
-                cartItems.style.display = 'none';
-                return;
-            }
-            
-            emptyState.style.display = 'none';
-            cartItems.style.display = 'block';
-            
-            // For demo, show static cart items
-            // In real app, you would render userData.cart
-        }
-
-        function updateCartBadge() {
-            const totalItems = userData.cart?.reduce((sum, item) => sum + item.quantity, 0) || 0;
-            const badge = document.getElementById('cartBadge');
-            if (badge) {
-                badge.textContent = totalItems;
-                badge.style.display = totalItems > 0 ? 'flex' : 'none';
-            }
-        }
-
-        function saveUserData() {
-            users[currentUserId] = userData;
-            localStorage.setItem('users', JSON.stringify(users));
-        }
-
-        function searchProducts(query) {
-            if (!query.trim()) {
-                loadPopularProducts();
-                return;
-            }
-            
-            const searchTerm = query.toLowerCase();
-            const filteredProducts = products.filter(product => 
-                product.name.toLowerCase().includes(searchTerm) ||
-                product.brand.toLowerCase().includes(searchTerm)
-            );
-            
-            const container = document.getElementById('popularProducts');
-            if (!container) return;
-            
-            container.innerHTML = '';
-            
-            if (filteredProducts.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 40px;">
-                        <i class="fas fa-search" style="font-size: 48px; color: var(--light-gray); margin-bottom: 16px;"></i>
-                        <h3 style="margin-bottom: 8px;">Ничего не найдено</h3>
-                        <p style="color: var(--gray);">Попробуйте изменить запрос</p>
-                    </div>
-                `;
-                return;
-            }
-            
-            filteredProducts.forEach(product => {
-                const isFavorite = userData.favorites?.includes(product.id) || false;
-                const productElement = createProductElement(product, isFavorite);
-                container.appendChild(productElement);
-            });
-        }
-
-        // Modal Functions
-        function showSaleModal() {
-            const modal = document.getElementById('saleModal');
-            const productsContainer = document.getElementById('saleProducts');
-            
-            productsContainer.innerHTML = '';
-            const saleProducts = products.slice(0, 3);
-            
-            saleProducts.forEach(product => {
-                const div = document.createElement('div');
-                div.className = 'cart-item';
-                div.style.marginBottom = '12px';
-                div.innerHTML = `
-                    <img src="${product.image}" alt="${product.name}" class="cart-item-image">
-                    <div class="cart-item-details">
-                        <div class="cart-item-title">${product.name}</div>
-                        <div class="cart-item-size">${product.brand}</div>
-                        <div style="display: flex; align-items: center; gap: 8px; margin-top: 8px;">
-                            <span style="font-size: 18px; font-weight: 700; color: var(--secondary);">
-                                ${Math.floor(product.price * 0.5).toLocaleString()} ₽
-                            </span>
-                            <span style="font-size: 14px; color: var(--gray); text-decoration: line-through;">
-                                ${product.price.toLocaleString()} ₽
-                            </span>
-                        </div>
-                    </div>
-                `;
-                productsContainer.appendChild(div);
-            });
-            
-            modal.classList.add('active');
-        }
-
-        function closeSaleModal() {
-            document.getElementById('saleModal').classList.remove('active');
-        }
-
-        function openCheckoutModal() {
-            if (!userData.cart || userData.cart.length === 0) {
-                showNotification('Корзина пуста');
-                return;
-            }
-            
-            // Pre-fill user data
-            if (userData.phone) {
-                document.getElementById('checkoutPhone').value = userData.phone;
-            }
-            if (userData.address) {
-                document.getElementById('checkoutAddress').value = userData.address;
-            }
-            
-            document.getElementById('checkoutModal').classList.add('active');
-        }
-
-        function closeCheckoutModal() {
-            document.getElementById('checkoutModal').classList.remove('active');
         }
 
         function openPhoneModal() {
-            document.getElementById('phoneModal').classList.add('active');
-        }
-
-        function closePhoneModal() {
-            document.getElementById('phoneModal').classList.remove('active');
+            showNotification('Для добавления телефона используйте Telegram бота');
         }
 
         function openAddressModal() {
-            if (userData.address) {
-                document.getElementById('addressStreet').value = userData.address;
-            }
-            document.getElementById('addressModal').classList.add('active');
-        }
-
-        function closeAddressModal() {
-            document.getElementById('addressModal').classList.remove('active');
+            showNotification('Функция в разработке');
         }
 
         function openCustomsModal() {
@@ -2712,108 +1347,6 @@
 
         function openInviteModal() {
             showNotification('Реферальная система в разработке');
-        }
-
-        function openSupportModal() {
-            showNotification('Служба поддержки: support@unicorn-shop.ru');
-        }
-
-        function savePhoneNumber() {
-            const input = document.getElementById('phoneInput');
-            if (input.value.trim()) {
-                userData.phone = input.value.trim();
-                saveUserData();
-                updateProfileUI();
-                showNotification('Номер телефона сохранен');
-                closePhoneModal();
-            } else {
-                showNotification('Введите номер телефона');
-            }
-        }
-
-        function saveAddress() {
-            const city = document.getElementById('addressCity').value;
-            const street = document.getElementById('addressStreet').value;
-            const index = document.getElementById('addressIndex').value;
-            
-            if (city && street) {
-                userData.address = `${city}, ${street}` + (index ? `, ${index}` : '');
-                saveUserData();
-                showNotification('Адрес сохранен');
-                closeAddressModal();
-            } else {
-                showNotification('Заполните обязательные поля');
-            }
-        }
-
-        function applyPromoCode() {
-            const code = document.getElementById('promoCodeInput').value;
-            const promo = promocodes[code];
-            
-            if (!promo) {
-                showNotification('Промокод не найден');
-                return;
-            }
-            
-            if (new Date(promo.expiresAt) < new Date()) {
-                showNotification('Промокод истек');
-                return;
-            }
-            
-            if (promo.usedBy && promo.usedBy.includes(currentUserId)) {
-                showNotification('Вы уже использовали этот промокод');
-                return;
-            }
-            
-            if (!promo.usedBy) promo.usedBy = [];
-            promo.usedBy.push(currentUserId);
-            localStorage.setItem('promocodes', JSON.stringify(promocodes));
-            
-            showNotification(`Промокод применен! Скидка ${promo.discount}%`);
-        }
-
-        function placeOrder() {
-            const name = document.getElementById('checkoutName').value;
-            const phone = document.getElementById('checkoutPhone').value;
-            const address = document.getElementById('checkoutAddress').value;
-            
-            if (!name || !phone || !address) {
-                showNotification('Заполните все обязательные поля');
-                return;
-            }
-            
-            // Save user info
-            userData.name = name;
-            userData.phone = phone;
-            userData.address = address;
-            saveUserData();
-            
-            // Create order
-            if (!userData.orders) userData.orders = [];
-            const order = {
-                id: Date.now(),
-                items: userData.cart || [],
-                total: userData.cart?.reduce((sum, item) => sum + (item.price * item.quantity), 0) || 0,
-                date: new Date().toISOString(),
-                status: 'processing'
-            };
-            
-            userData.orders.push(order);
-            userData.cart = [];
-            saveUserData();
-            
-            showNotification('Заказ успешно оформлен!');
-            closeCheckoutModal();
-            
-            // Update UI
-            updateCartBadge();
-            updateProfileUI();
-            
-            // Show success message
-            setTimeout(() => {
-                switchPage('profile');
-                showNotification('Спасибо за заказ! Мы свяжемся с вами для подтверждения.');
-            }, 500);
         }
 
         function showNotification(message) {
