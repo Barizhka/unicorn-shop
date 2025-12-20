@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Все стили остаются без изменений */
+        /* Все стили остаются без изменений до конца CSS */
         :root {
             --primary: #8A2BE2;
             --primary-light: #9D4EDD;
@@ -979,6 +979,9 @@
 
         .admin-section {
             margin-bottom: 25px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
         }
 
         .admin-section h3 {
@@ -2045,6 +2048,84 @@
             -ms-user-select: none;
             user-select: none;
         }
+
+        /* Новые стили для админ-панели */
+        .size-management {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .size-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .size-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .size-tag {
+            padding: 6px 12px;
+            background: var(--light);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .size-tag .remove-size {
+            color: var(--secondary);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .characteristic-management {
+            margin-bottom: 10px;
+        }
+
+        .char-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .char-input {
+            flex: 1;
+            padding: 8px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .char-list {
+            margin-top: 10px;
+        }
+
+        .char-tag {
+            padding: 8px;
+            background: var(--light);
+            border-radius: 6px;
+            margin-bottom: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bulk-textarea {
+            width: 100%;
+            height: 200px;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 12px;
+            margin-bottom: 10px;
+        }
     </style>
 </head>
 <body>
@@ -2057,6 +2138,95 @@
             <button class="close-modal" id="closeAdmin">&times;</button>
         </div>
         
+        <!-- Управление отзывами -->
+        <div class="admin-section">
+            <h3><i class="fas fa-comment"></i> Управление отзывами</h3>
+            <select class="admin-input" id="adminReviewProduct">
+                <option value="">Выберите товар</option>
+            </select>
+            <input type="text" class="admin-input" id="reviewAuthor" placeholder="Имя автора">
+            <input type="number" class="admin-input" id="reviewRating" placeholder="Рейтинг (1-5)" min="1" max="5">
+            <textarea class="admin-input" id="reviewText" placeholder="Текст отзыва" rows="3"></textarea>
+            <button class="admin-btn success" id="addReviewBtn">Добавить отзыв</button>
+            <button class="admin-btn" onclick="viewProductReviews()">Просмотреть отзывы</button>
+        </div>
+        
+        <!-- Добавление товаров пакетами -->
+        <div class="admin-section">
+            <h3><i class="fas fa-boxes"></i> Добавить товары пакетами</h3>
+            <select class="admin-input" id="adminBulkCategory">
+                <option value="">Выберите категорию</option>
+            </select>
+            <textarea class="bulk-textarea" id="bulkProducts" placeholder="Введите товары в формате JSON:
+[
+  {
+    'name': 'Название товара',
+    'brand': 'Бренд',
+    'price': 1000,
+    'oldPrice': 1200,
+    'image': 'URL картинки',
+    'description': 'Описание товара'
+  }
+]"></textarea>
+            <button class="admin-btn success" id="addBulkProducts">Добавить товары пакетом</button>
+        </div>
+        
+        <!-- Управление размерами -->
+        <div class="admin-section">
+            <h3><i class="fas fa-ruler"></i> Управление размерами товара</h3>
+            <select class="admin-input" id="adminProductManage">
+                <option value="">Выберите товар</option>
+            </select>
+            
+            <div id="sizeManagementSection" style="display: none;">
+                <div class="size-management">
+                    <input type="text" class="size-input" id="newSize" placeholder="Новый размер (например, M)">
+                    <button class="admin-btn" onclick="addProductSize()">Добавить</button>
+                </div>
+                <div id="availableSizesList"></div>
+                
+                <div class="size-management" style="margin-top: 15px;">
+                    <input type="text" class="size-input" id="removeSize" placeholder="Размер для удаления">
+                    <button class="admin-btn delete" onclick="removeProductSize()">Удалить</button>
+                </div>
+            </div>
+            
+            <div style="margin-top: 15px;">
+                <label style="display: block; margin-bottom: 8px; font-size: 14px;">
+                    <input type="checkbox" id="hideSizesForAccessories">
+                    Скрыть размеры для аксессуаров
+                </label>
+                <button class="admin-btn" onclick="applySizeRules()">Применить правило</button>
+            </div>
+        </div>
+        
+        <!-- Управление характеристиками -->
+        <div class="admin-section">
+            <h3><i class="fas fa-list-alt"></i> Управление характеристиками</h3>
+            <select class="admin-input" id="adminCharProduct">
+                <option value="">Выберите товар</option>
+            </select>
+            
+            <div id="characteristicManagement" style="display: none;">
+                <div class="characteristic-management">
+                    <div class="char-row">
+                        <input type="text" class="char-input" id="charName" placeholder="Название характеристики">
+                        <input type="text" class="char-input" id="charValue" placeholder="Значение">
+                        <button class="admin-btn" onclick="addCharacteristic()">Добавить</button>
+                    </div>
+                    <div id="characteristicsList"></div>
+                    
+                    <div class="char-row" style="margin-top: 15px;">
+                        <input type="text" class="char-input" id="removeCharName" placeholder="Название для удаления">
+                        <button class="admin-btn delete" onclick="removeCharacteristic()">Удалить</button>
+                    </div>
+                </div>
+                
+                <button class="admin-btn success" onclick="saveCharacteristics()">Сохранить характеристики</button>
+            </div>
+        </div>
+        
+        <!-- Существующие разделы админки -->
         <div class="admin-section">
             <h3><i class="fas fa-image"></i> Заменить картинку категории</h3>
             <select class="admin-input" id="adminCategorySelect">
@@ -2123,7 +2293,7 @@
         </div>
     </div>
 
-    <!-- Promo Codes Modal -->
+    <!-- Модальные окна -->
     <div class="modal-overlay" id="promoCodesModal">
         <div class="modal">
             <div class="modal-header">
@@ -2136,7 +2306,6 @@
         </div>
     </div>
 
-    <!-- Users Modal -->
     <div class="modal-overlay" id="usersModal">
         <div class="modal">
             <div class="modal-header">
@@ -2145,6 +2314,18 @@
             </div>
             <div class="modal-body">
                 <div id="usersList"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="reviewsModal">
+        <div class="modal">
+            <div class="modal-header">
+                <div class="modal-title">Отзывы товара</div>
+                <button class="close-modal" onclick="closeReviewsModal()">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div id="reviewsList"></div>
             </div>
         </div>
     </div>
@@ -2500,7 +2681,23 @@
                 reviewsCount: 128,
                 inStock: true,
                 deliveryTime: "1-3 дня",
-                warranty: "30 дней"
+                warranty: "30 дней",
+                reviews: [
+                    {
+                        id: 1,
+                        author: "Анна Смирнова",
+                        rating: 5,
+                        date: "2024-01-15",
+                        text: "Отличные кроссовки! Очень удобные и стильные. Качество на высоте."
+                    },
+                    {
+                        id: 2,
+                        author: "Иван Петров",
+                        rating: 4,
+                        date: "2024-01-10",
+                        text: "Хорошие кроссовки, но немного жесткие в первые дни носки."
+                    }
+                ]
             },
             {
                 id: 2,
@@ -2534,143 +2731,16 @@
                 reviewsCount: 89,
                 inStock: true,
                 deliveryTime: "2-4 дня",
-                warranty: "6 месяцев"
-            },
-            {
-                id: 3,
-                name: "Кожаная куртка AllSaints Balfern",
-                brand: "AllSaints",
-                price: 34990,
-                oldPrice: 42990,
-                discount: 19,
-                category: "men",
-                image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                images: [
-                    "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                    "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                ],
-                description: "Кожаная куртка AllSaints Balfern — это воплощение стиля и качества. Изготовленная из высококачественной кожи овчины, эта куртка станет центральным элементом вашего гардероба.\n\nОсобенности:\n• Натуральная кожа овчины толщиной 1,0-1,2 мм\n• Подкладка из вискозы для комфорта\n• Застежка на молнию с защитой от ветра\n• 2 внешних кармана на молнии\n• 2 внутренних кармана\n• Регулируемый пояс на талии\n• Стойка воротника\n\nИдеально подходит для прохладной погоды, сочетает в себе стиль и практичность.",
-                characteristics: {
-                    "Материал": "Натуральная кожа овчины",
-                    "Толщина кожи": "1,0-1,2 мм",
-                    "Подкладка": "Вискоза 100%",
-                    "Застежка": "Молния",
-                    "Карманы": "4 (2 внешних, 2 внутренних)",
-                    "Особенности": "Регулируемый пояс, стойка воротника",
-                    "Уход": "Специальный уход за кожей",
-                    "Производство": "Великобритания"
-                },
-                sizes: ["S", "M", "L", "XL", "XXL"],
-                availableSizes: ["M", "L", "XL"],
-                materials: "Натуральная кожа, вискоза",
-                colors: ["Черный", "Коричневый", "Бордовый"],
-                rating: 4.8,
-                reviewsCount: 45,
-                inStock: true,
-                deliveryTime: "3-5 дней",
-                warranty: "1 год"
-            },
-            {
-                id: 4,
-                name: "Летнее платье Zara с цветочным принтом",
-                brand: "Zara",
-                price: 5990,
-                oldPrice: 7990,
-                discount: 25,
-                category: "women",
-                image: "https://images.unsplash.com/photo-1567095761054-7a02e69e5c43?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                images: [
-                    "https://images.unsplash.com/photo-1567095761054-7a02e69e5c43?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                    "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                ],
-                description: "Легкое и воздушное летнее платье от Zara с ярким цветочным принтом. Свободный крой обеспечивает максимальный комфорт в жаркую погоду.\n\nОсобенности:\n• Изготовлено из 100% хлопка\n• Свободный крой для удобства\n• Яркий цветочный принт\n• Застежка на спинке\n• Длина миди (до середины икры)\n• Легкая ткань, хорошо пропускающая воздух\n\nИдеально подходит для летних прогулок, пляжа или романтического свидания. Сочетается с сандалиями, балетками или кроссовками.",
-                characteristics: {
-                    "Материал": "100% хлопок",
-                    "Плотность ткани": "Легкая",
-                    "Крой": "Свободный",
-                    "Длина": "Мидди (90 см)",
-                    "Застежка": "На спинке",
-                    "Уход": "Машинная стирка при 30°C",
-                    "Принт": "Цветочный, устойчивый к стирке",
-                    "Производство": "Испания"
-                },
-                sizes: ["XS", "S", "M", "L"],
-                availableSizes: ["XS", "S", "M"],
-                materials: "100% хлопок",
-                colors: ["Белый с цветами", "Голубой с цветами", "Розовый с цветами"],
-                rating: 4.6,
-                reviewsCount: 67,
-                inStock: true,
-                deliveryTime: "1-2 дня",
-                warranty: "30 дней"
-            },
-            {
-                id: 5,
-                name: "Кроссовки Adidas Ultraboost 22",
-                brand: "Adidas",
-                price: 14990,
-                oldPrice: 18990,
-                discount: 21,
-                category: "shoes",
-                image: "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                images: [
-                    "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                    "https://images.unsplash.com/photo-1600185365483-8c21ba5c6bcf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                ],
-                description: "Кроссовки Adidas Ultraboost 22 — это революция в беговой обуви. С технологией Boost они обеспечивают непревзойденный комфорт и возврат энергии при каждом шаге.\n\nОсобенности:\n• Верх из переработанного материала Primeblue\n• Технология Boost для максимальной амортизации\n• Подошва Continental™ для лучшего сцепления\n• Система Torsion System для стабильности\n• Стелька OrthoLite для комфорта\n\nИдеально подходят для бега, тренировок и повседневной носки.",
-                characteristics: {
-                    "Материал верха": "Primeblue (переработанный)",
-                    "Технология": "Boost, Torsion System",
-                    "Подошва": "Continental™ Rubber",
-                    "Вес": "310 г (пара)",
-                    "Назначение": "Беговые, повседневные",
-                    "Амортизация": "Высокая",
-                    "Производство": "Вьетнам",
-                    "Гарантия": "6 месяцев"
-                },
-                sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44"],
-                availableSizes: ["38", "39", "40", "41", "42", "43"],
-                materials: "Переработанный полиэстер, резина",
-                colors: ["Черный", "Белый", "Синий"],
-                rating: 4.9,
-                reviewsCount: 203,
-                inStock: true,
-                deliveryTime: "2-3 дня",
-                warranty: "6 месяцев"
-            },
-            {
-                id: 6,
-                name: "Кроссовки Puma RS-X",
-                brand: "Puma",
-                price: 8990,
-                oldPrice: 11990,
-                discount: 25,
-                category: "shoes",
-                image: "https://images.unsplash.com/photo-1605348532760-6753d2c43329?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                images: [
-                    "https://images.unsplash.com/photo-1605348532760-6753d2c43329?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                    "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
-                ],
-                description: "Кроссовки Puma RS-X — это смелый дизайн и современные технологии. Вдохновленные ретро-стилем 80-х, они сочетают в себе комфорт и уличный стиль.\n\nОсобенности:\n• Многослойный верх из сетки и кожи\n• Технология RS (Running System)\n• Амортизирующая подошва\n• Яркий цветовой дизайн\n• Универсальный стиль\n\nПодходят для повседневной носки и создания модных образов.",
-                characteristics: {
-                    "Материал верха": "Сетка и синтетическая кожа",
-                    "Технология": "RS (Running System)",
-                    "Подошва": "Резина с амортизацией",
-                    "Вес": "350 г (пара)",
-                    "Стиль": "Ретро, уличный",
-                    "Назначение": "Повседневные",
-                    "Производство": "Китай",
-                    "Гарантия": "3 месяца"
-                },
-                sizes: ["36", "37", "38", "39", "40", "41", "42", "43"],
-                availableSizes: ["37", "38", "39", "40", "41", "42"],
-                materials: "Сетка, синтетическая кожа, резина",
-                colors: ["Черный/красный", "Белый/синий", "Серый/оранжевый"],
-                rating: 4.4,
-                reviewsCount: 78,
-                inStock: true,
-                deliveryTime: "1-3 дня",
-                warranty: "3 месяца"
+                warranty: "6 месяцев",
+                reviews: [
+                    {
+                        id: 1,
+                        author: "Мария Иванова",
+                        rating: 5,
+                        date: "2024-01-12",
+                        text: "Лучшие джинсы! Классика на все времена."
+                    }
+                ]
             }
         ];
 
@@ -2755,12 +2825,7 @@
                 // Загружаем данные
                 await loadAllData();
                 
-                // Определяем ID пользователя (приоритеты):
-                // 1. Telegram ID (если есть в сессии)
-                // 2. ID из хэша URL
-                // 3. Сохраненный ID
-                // 4. Новый ID
-                
+                // Определяем ID пользователя
                 let userIdFromHash = null;
                 const hash = window.location.hash;
                 
@@ -2779,7 +2844,6 @@
                     currentUserId = sessionData.userId;
                     console.log('Используем ID из сессии:', currentUserId);
                 } else {
-                    // Создаем новый ID
                     const randomNum = Math.floor(1000 + Math.random() * 9000);
                     currentUserId = `user_${Date.now()}_${randomNum}`;
                     console.log('Создан новый ID:', currentUserId);
@@ -2794,9 +2858,7 @@
                 
                 // ВОССТАНАВЛИВАЕМ данные из сессии если они есть
                 if (sessionData) {
-                    // Объединяем корзину
                     if (sessionData.cart && sessionData.cart.length > 0) {
-                        // Объединяем товары, избегая дубликатов
                         sessionData.cart.forEach(sessionItem => {
                             const existingItem = userData.cart.find(item => item.id === sessionItem.id);
                             if (!existingItem) {
@@ -2806,7 +2868,6 @@
                         console.log('Восстановлена корзина из сессии:', sessionData.cart.length, 'товаров');
                     }
                     
-                    // Объединяем избранное
                     if (sessionData.favorites && sessionData.favorites.length > 0) {
                         sessionData.favorites.forEach(favId => {
                             if (!userData.favorites.includes(favId)) {
@@ -2816,7 +2877,6 @@
                         console.log('Восстановлено избранное из сессии:', sessionData.favorites.length, 'товаров');
                     }
                     
-                    // Сохраняем обновленные данные
                     saveUserData();
                 }
                 
@@ -2864,25 +2924,21 @@
             console.log('- Telegram ID:', telegramUserId);
             console.log('- Telegram username:', telegramUsername);
             
-            // 1. Проверяем по Telegram ID
             if (telegramUserId && telegramUserId === ADMIN_USER_ID) {
                 console.log('✅ Администратор по Telegram ID');
                 return true;
             }
             
-            // 2. Проверяем по текущему ID
             if (currentUserId && currentUserId === ADMIN_USER_ID) {
                 console.log('✅ Администратор по текущему ID');
                 return true;
             }
             
-            // 3. Проверяем по Telegram username
             if (telegramUsername && (telegramUsername === 'barizhka' || telegramUsername === 'admin')) {
                 console.log('✅ Администратор по Telegram username');
                 return true;
             }
             
-            // 4. Проверяем по имени пользователя
             if (userData && userData.name && userData.name.toLowerCase().includes('админ')) {
                 console.log('✅ Администратор по имени');
                 return true;
@@ -2894,7 +2950,6 @@
 
         async function loadAllData() {
             try {
-                // Загружаем из localStorage
                 const savedCategories = localStorage.getItem('unicorn_categories');
                 const savedProducts = localStorage.getItem('unicorn_products');
                 
@@ -2903,11 +2958,9 @@
                     products = JSON.parse(savedProducts);
                     console.log('Данные загружены из localStorage');
                 } else {
-                    // Используем дефолтные данные
                     categories = JSON.parse(JSON.stringify(defaultCategories));
                     products = JSON.parse(JSON.stringify(defaultProducts));
                     
-                    // Сохраняем
                     localStorage.setItem('unicorn_categories', JSON.stringify(categories));
                     localStorage.setItem('unicorn_products', JSON.stringify(products));
                     console.log('Созданы дефолтные данные');
@@ -2924,11 +2977,9 @@
             try {
                 const users = JSON.parse(localStorage.getItem('unicorn_users')) || {};
                 
-                // ВАЖНОЕ ИСПРАВЛЕНИЕ: Ищем пользователя по Telegram данным
                 let foundUser = null;
                 let foundUserId = null;
                 
-                // Ищем по Telegram ID
                 if (telegramUserId) {
                     for (const uid in users) {
                         if (users[uid].telegramId === telegramUserId) {
@@ -2939,7 +2990,6 @@
                     }
                 }
                 
-                // Ищем по Telegram username
                 if (!foundUser && telegramUsername) {
                     for (const uid in users) {
                         if (users[uid].telegramUsername === telegramUsername) {
@@ -2950,33 +3000,26 @@
                     }
                 }
                 
-                // Если нашли существующего пользователя - используем его
                 if (foundUser) {
                     console.log('Найден существующий пользователь:', foundUserId, foundUser.name);
                     
-                    // Обновляем время активности
                     foundUser.lastActive = new Date().toISOString();
                     
-                    // Обновляем Telegram данные
                     if (telegramUsername) foundUser.telegramUsername = telegramUsername;
                     if (telegramFirstName) foundUser.telegramFirstName = telegramFirstName;
                     if (telegramLastName) foundUser.telegramLastName = telegramLastName;
                     if (telegramUserId) foundUser.telegramId = telegramUserId;
                     
-                    // Обновляем текущий ID
                     currentUserId = foundUserId;
                     localStorage.setItem('unicorn_userId', currentUserId);
                     
-                    // Сохраняем обновленные данные
                     users[foundUserId] = foundUser;
                     localStorage.setItem('unicorn_users', JSON.stringify(users));
                     
                     return foundUser;
                 }
                 
-                // Если пользователь не найден - создаем/загружаем по userId
                 if (!users[userId]) {
-                    // Формируем красивое имя
                     let displayName = '';
                     if (telegramFirstName) {
                         displayName = telegramFirstName;
@@ -2989,7 +3032,6 @@
                         displayName = `Пользователь ${userId.slice(-4)}`;
                     }
                     
-                    // Создаем нового пользователя
                     users[userId] = {
                         id: userId,
                         name: displayName,
@@ -3011,10 +3053,8 @@
                     localStorage.setItem('unicorn_users', JSON.stringify(users));
                     console.log('Создан новый пользователь:', userId, displayName);
                 } else {
-                    // Обновляем существующего пользователя
                     users[userId].lastActive = new Date().toISOString();
                     
-                    // Обновляем Telegram данные
                     if (telegramUsername) users[userId].telegramUsername = telegramUsername;
                     if (telegramFirstName) users[userId].telegramFirstName = telegramFirstName;
                     if (telegramLastName) users[userId].telegramLastName = telegramLastName;
@@ -3069,7 +3109,6 @@
                 localStorage.setItem('unicorn_users', JSON.stringify(users));
                 console.log('Данные пользователя сохранены:', currentUserId);
                 
-                // Сохраняем сессию
                 saveUserSession();
                 
             } catch (error) {
@@ -3103,10 +3142,8 @@
             updateFavoritesBadge();
             setupAdminPanel();
             
-            // Проверяем и показываем админ-кнопку
             checkAndShowAdminButton();
             
-            // Добавляем обработчик изменений hash
             window.addEventListener('hashchange', handleHashChange);
         }
 
@@ -3133,31 +3170,24 @@
                 if (userId && userId !== currentUserId) {
                     console.log('Смена пользователя по хэшу:', userId);
                     
-                    // Сохраняем текущую сессию перед сменой
                     saveUserSession();
                     
-                    // Обновляем ID
                     currentUserId = decodeURIComponent(userId);
                     localStorage.setItem('unicorn_userId', currentUserId);
                     
-                    // Загружаем нового пользователя
                     userData = getUserData(currentUserId);
                     
-                    // Перепроверяем админские права
                     const wasAdmin = isAdmin;
                     isAdmin = checkAdminRights();
                     
-                    // Обновляем UI
                     updateProfileUI();
                     updateCartBadge();
                     updateFavoritesBadge();
                     
-                    // Обновляем админ-кнопку если статус изменился
                     if (wasAdmin !== isAdmin) {
                         checkAndShowAdminButton();
                     }
                     
-                    // Перезагружаем текущую страницу
                     const activePage = document.querySelector('.page.active').id;
                     switchPage(activePage);
                 }
@@ -3255,7 +3285,6 @@
             
             container.innerHTML = '';
             
-            // Берем 8 случайных товаров
             const shuffled = [...products].sort(() => 0.5 - Math.random());
             const popular = shuffled.slice(0, 8);
             
@@ -3300,9 +3329,7 @@
                 </div>
             `;
             
-            // Добавляем обработчик клика на карточку товара
             div.addEventListener('click', function(e) {
-                // Проверяем, не кликнули ли на кнопку
                 if (!e.target.closest('.wishlist-btn') && !e.target.closest('.add-to-cart')) {
                     openProductPage(product.id);
                 }
@@ -3316,7 +3343,7 @@
                 this.classList.toggle('active', isNowFavorite);
                 this.innerHTML = `<i class="${isNowFavorite ? 'fas' : 'far'} fa-heart"></i>`;
                 updateFavoritesBadge();
-                saveUserSession(); // Сохраняем сессию после изменения
+                saveUserSession();
             });
             
             const addToCartBtn = div.querySelector('.add-to-cart');
@@ -3325,7 +3352,7 @@
                 addToCart(product);
                 this.classList.add('added');
                 this.innerHTML = '<i class="fas fa-check"></i> В корзине';
-                saveUserSession(); // Сохраняем сессию после изменения
+                saveUserSession();
                 
                 setTimeout(() => {
                     const inCartNow = userData.cart.find(item => item.id === product.id);
@@ -3352,7 +3379,6 @@
                 return;
             }
             
-            // Обновляем просмотренные товары
             if (!userData.viewed.includes(productId)) {
                 userData.viewed.push(productId);
                 saveUserData();
@@ -3367,7 +3393,9 @@
             const images = product.images || [product.image];
             const mainImage = images[0];
             
-            // Создаем HTML для страницы товара
+            // Проверяем, нужно ли показывать размеры (не показываем для аксессуаров)
+            const showSizes = product.category !== 'accessories' && product.sizes && product.sizes.length > 0;
+            
             container.innerHTML = `
                 <div class="product-page-header">
                     <div class="product-images">
@@ -3405,7 +3433,7 @@
                             ${product.discount > 0 ? `<span class="discount-large">-${product.discount}%</span>` : ''}
                         </div>
                         
-                        ${product.sizes && product.sizes.length > 0 ? `
+                        ${showSizes ? `
                             <div class="size-selector">
                                 <label class="size-label">Размер:</label>
                                 <div class="size-grid" id="sizeGrid">
@@ -3542,11 +3570,9 @@
                 </div>
             `;
             
-            // Сбрасываем выбранный размер и количество
             selectedSize = null;
             selectedQuantity = 1;
             
-            // Загружаем похожие товары
             loadSimilarProducts(product);
         }
 
@@ -3573,64 +3599,10 @@
         }
 
         function getProductReviews(productId) {
-            // Генерируем реалистичные отзывы на основе рейтинга товара
             const product = products.find(p => p.id === productId);
             if (!product) return '';
             
-            const reviews = [];
-            const reviewCount = Math.min(product.reviewsCount, 10); // Показываем максимум 10 отзывов
-            
-            // Базовые имена для отзывов
-            const names = ["Анна Смирнова", "Иван Петров", "Мария Иванова", "Алексей Сидоров", "Екатерина Волкова", 
-                          "Дмитрий Козлов", "Ольга Новикова", "Сергей Морозов", "Татьяна Павлова", "Михаил Федоров"];
-            
-            // Темы отзывов в зависимости от категории товара
-            const categoryThemes = {
-                "shoes": ["Очень удобные", "Качество на высоте", "Хорошая посадка", "Стильный дизайн", "Долговечные"],
-                "men": ["Отличное качество", "Хорошая посадка", "Стильно выглядит", "Удобно носить", "Долговечный материал"],
-                "women": ["Красивый дизайн", "Хорошее качество", "Идеальная посадка", "Комфортно носить", "Стильный вид"],
-                "accessories": ["Стильный аксессуар", "Хорошее качество", "Удобно использовать", "Красивый дизайн", "Практичный"]
-            };
-            
-            const themes = categoryThemes[product.category] || ["Отличный товар", "Хорошее качество", "Рекомендую", "Доволен покупкой"];
-            
-            // Генерируем отзывы
-            for (let i = 0; i < reviewCount; i++) {
-                const rating = Math.max(3, Math.min(5, product.rating + (Math.random() - 0.5)));
-                const name = names[Math.floor(Math.random() * names.length)];
-                const date = new Date(Date.now() - Math.random() * 365 * 24 * 60 * 60 * 1000);
-                const theme = themes[Math.floor(Math.random() * themes.length)];
-                
-                let text = `${theme}. `;
-                
-                if (rating >= 4.5) {
-                    text += "Полностью соответствует описанию, очень доволен покупкой!";
-                } else if (rating >= 4) {
-                    text += "Хороший товар, рекомендую к покупке.";
-                } else if (rating >= 3.5) {
-                    text += "Неплохой товар, но есть небольшие недостатки.";
-                } else {
-                    text += "Есть некоторые проблемы, но в целом неплохо.";
-                }
-                
-                // Добавляем детали в зависимости от категории
-                if (product.category === "shoes") {
-                    text += ` Размер соответствует.`;
-                } else if (product.category === "men" || product.category === "women") {
-                    text += ` Посадка хорошая.`;
-                }
-                
-                reviews.push({
-                    id: i + 1,
-                    author: name,
-                    date: date.toISOString(),
-                    rating: rating,
-                    text: text
-                });
-            }
-            
-            // Сортируем по дате (новые сверху)
-            reviews.sort((a, b) => new Date(b.date) - new Date(a.date));
+            const reviews = product.reviews || [];
             
             if (reviews.length === 0) {
                 return `
@@ -3664,14 +3636,10 @@
             
             container.innerHTML = '';
             
-            // Ищем товары из той же категории, исключая текущий
             const similarProducts = products
                 .filter(p => p.category === product.category && p.id !== product.id);
             
-            // Перемешиваем массив для случайного порядка
             const shuffled = [...similarProducts].sort(() => 0.5 - Math.random());
-            
-            // Берем максимум 4 товара
             const randomSimilar = shuffled.slice(0, 4);
             
             if (randomSimilar.length === 0) {
@@ -3695,7 +3663,6 @@
                 mainImage.src = imageUrl;
             }
             
-            // Обновляем активную миниатюру
             document.querySelectorAll('.product-thumbnail').forEach(thumb => {
                 thumb.classList.remove('active');
             });
@@ -3708,7 +3675,6 @@
         function selectSize(size) {
             selectedSize = size;
             
-            // Обновляем активный размер
             document.querySelectorAll('.size-btn').forEach(btn => {
                 btn.classList.remove('active');
                 if (btn.dataset.size === size) {
@@ -3776,7 +3742,6 @@
             const product = products.find(p => p.id === productId);
             const isNowFavorite = userData.favorites.includes(productId);
             
-            // Обновляем кнопку на странице товара
             const wishlistBtn = document.querySelector('.wishlist-btn');
             if (wishlistBtn) {
                 wishlistBtn.innerHTML = `<i class="${isNowFavorite ? 'fas' : 'far'} fa-heart"></i> ${isNowFavorite ? 'В избранном' : 'Добавить в избранное'}`;
@@ -3791,14 +3756,14 @@
             if (!product) return;
             
             // Проверяем размер для товаров, где он требуется
-            if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+            const showSizes = product.category !== 'accessories' && product.sizes && product.sizes.length > 0;
+            if (showSizes && !selectedSize) {
                 showNotification('Пожалуйста, выберите размер');
                 return;
             }
             
             addToCart(product, selectedSize, selectedQuantity);
             
-            // Обновляем кнопку на странице товара
             const addToCartBtn = document.querySelector('.add-to-cart-large');
             if (addToCartBtn) {
                 addToCartBtn.classList.add('added');
@@ -3810,16 +3775,14 @@
             const product = products.find(p => p.id === productId);
             if (!product) return;
             
-            // Проверяем размер для товаров, где он требуется
-            if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+            const showSizes = product.category !== 'accessories' && product.sizes && product.sizes.length > 0;
+            if (showSizes && !selectedSize) {
                 showNotification('Пожалуйста, выберите размер');
                 return;
             }
             
-            // Добавляем в корзину
             addToCart(product, selectedSize, selectedQuantity);
             
-            // Переходим к оформлению заказа
             switchPage('checkout');
             loadCheckoutPage();
         }
@@ -3854,7 +3817,6 @@
         }
 
         function switchProductTab(tabId) {
-            // Обновляем табы
             document.querySelectorAll('.product-tabs .tab').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -3863,7 +3825,6 @@
                 content.classList.remove('active');
             });
             
-            // Активируем выбранный таб
             const activeTab = Array.from(document.querySelectorAll('.product-tabs .tab')).find(tab => 
                 tab.textContent.includes(tabId === 'description' ? 'Описание' : 
                                         tabId === 'specs' ? 'Характеристики' : 'Отзывы')
@@ -3882,7 +3843,6 @@
         function addReview(productId) {
             const reviewText = prompt('Оставьте свой отзыв о товаре:');
             if (reviewText && reviewText.trim()) {
-                // Здесь можно сохранить отзыв в localStorage
                 showNotification('Спасибо за ваш отзыв! Он будет опубликован после модерации.');
             }
         }
@@ -3991,7 +3951,6 @@
                 `;
             });
             
-            // Промокод форма
             html += `
                 <div class="cart-total">
                     <div class="promo-code-container">
@@ -4052,7 +4011,6 @@
                 return;
             }
             
-            // Проверяем промокод
             const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
             const promo = promoCodes.find(p => p.code === code);
             
@@ -4061,25 +4019,21 @@
                 return;
             }
             
-            // Проверяем срок действия
             if (promo.expiry && new Date(promo.expiry) < new Date()) {
                 showNotification('Промокод истек');
                 return;
             }
             
-            // Проверяем количество использований
             if (promo.maxUses && promo.used >= promo.maxUses) {
                 showNotification('Промокод уже использован максимальное количество раз');
                 return;
             }
             
-            // Проверяем, не использовал ли уже этот пользователь этот промокод
             if (promo.usedBy && promo.usedBy.includes(currentUserId)) {
                 showNotification('Вы уже использовали этот промокод');
                 return;
             }
             
-            // Применяем промокод
             activePromoCode = promo;
             showNotification(`Промокод "${code}" применен! Скидка: ${promo.discount}%`);
             loadCartPage();
@@ -4168,7 +4122,6 @@
         }
 
         async function submitOrder() {
-            // Валидация формы
             const name = document.getElementById('checkoutName').value.trim();
             const phone = document.getElementById('checkoutPhone').value.trim();
             const email = document.getElementById('checkoutEmail').value.trim();
@@ -4195,12 +4148,10 @@
                 return;
             }
             
-            // Обновляем данные пользователя
             userData.name = name;
             userData.phone = phone;
             userData.address = address;
             
-            // Создаем заказ
             const orderId = 'ORD-' + Date.now();
             const subtotal = userData.cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
             const delivery = subtotal > 5000 ? 0 : 500;
@@ -4238,29 +4189,21 @@
                 ]
             };
             
-            // Обновляем использование промокода если он был применен
             if (activePromoCode) {
                 updatePromoCodeUsage(activePromoCode.code);
             }
             
-            // Добавляем заказ
             userData.orders.push(order);
-            
-            // Очищаем корзину и сбрасываем промокод
             userData.cart = [];
             activePromoCode = null;
             
-            // Сохраняем данные
             saveUserData();
             updateCartBadge();
             
-            // Сохраняем заказ в общую базу заказов
             saveOrderToDatabase(order);
             
-            // Отправляем уведомление в Telegram
             await sendTelegramNotification(order);
             
-            // Показываем подтверждение
             switchPage('profile');
             switchProfileTab('orders');
             loadUserOrders();
@@ -4274,16 +4217,13 @@
                 const promoIndex = promoCodes.findIndex(p => p.code === promoCode);
                 
                 if (promoIndex !== -1) {
-                    // Увеличиваем счетчик использований
                     promoCodes[promoIndex].used = (promoCodes[promoIndex].used || 0) + 1;
                     
-                    // Добавляем пользователя в список использовавших
                     if (!promoCodes[promoIndex].usedBy) {
                         promoCodes[promoIndex].usedBy = [];
                     }
                     promoCodes[promoIndex].usedBy.push(currentUserId);
                     
-                    // Сохраняем
                     localStorage.setItem('unicorn_promocodes', JSON.stringify(promoCodes));
                 }
             } catch (error) {
@@ -4377,7 +4317,6 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
             
             let html = '<div class="orders-list">';
             
-            // Сортируем заказы по дате (новые сверху)
             const sortedOrders = [...userData.orders].sort((a, b) => 
                 new Date(b.date) - new Date(a.date)
             );
@@ -4483,7 +4422,6 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
                 
                 let html = '<div class="admin-orders">';
                 
-                // Сортируем заказы по дате (новые сверху)
                 const sortedOrders = [...allOrders].sort((a, b) => 
                     new Date(b.date) - new Date(a.date)
                 );
@@ -4493,7 +4431,6 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
                     const statusClass = `status-${order.status}`;
                     const statusText = getStatusText(order.status);
                     
-                    // Формируем информацию о Telegram пользователе
                     let telegramInfo = '';
                     if (order.customer.telegramUsername) {
                         telegramInfo = `👤 Telegram: @${order.customer.telegramUsername}`;
@@ -4611,7 +4548,6 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
                     return;
                 }
                 
-                // Обновляем статус
                 const oldStatus = allOrders[orderIndex].status;
                 allOrders[orderIndex].status = newStatus;
                 allOrders[orderIndex].statusHistory.push({
@@ -4620,18 +4556,14 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
                     comment: `Статус изменен администратором`
                 });
                 
-                // Сохраняем
                 localStorage.setItem('unicorn_all_orders', JSON.stringify(allOrders));
                 
-                // Обновляем заказ у пользователя
                 updateUserOrderStatus(orderId, newStatus, allOrders[orderIndex].userId);
                 
-                // Отправляем уведомление в Telegram об изменении статуса
                 await sendStatusUpdateNotification(allOrders[orderIndex], oldStatus, newStatus);
                 
                 showNotification(`Статус заказа #${orderId} изменен на "${getStatusText(newStatus)}"`);
                 
-                // Обновляем отображение
                 loadAdminOrders();
                 
             } catch (error) {
@@ -4681,7 +4613,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             try {
                 const users = JSON.parse(localStorage.getItem('unicorn_users')) || {};
                 
-                // Если userId не передан, ищем пользователя
                 if (!userId) {
                     for (const uid in users) {
                         const user = users[uid];
@@ -4699,7 +4630,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                     const orderIndex = user.orders.findIndex(order => order.id === orderId);
                     
                     if (orderIndex !== -1) {
-                        // Обновляем статус
                         user.orders[orderIndex].status = newStatus;
                         user.orders[orderIndex].statusHistory.push({
                             status: newStatus,
@@ -4707,7 +4637,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                             comment: 'Статус обновлен администратором'
                         });
                         
-                        // Сохраняем
                         localStorage.setItem('unicorn_users', JSON.stringify(users));
                     }
                 }
@@ -4731,7 +4660,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                     const orderDate = new Date(order.date);
                     const daysDiff = (now - orderDate) / (1000 * 60 * 60 * 24);
                     
-                    // Автоматически обновляем статусы по времени
                     if (order.status === 'new' && daysDiff >= 1) {
                         order.status = 'processing';
                         order.statusHistory.push({
@@ -4768,14 +4696,12 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
         function updateProfileUI() {
             if (!userData) return;
             
-            // Обновляем аватар и имя
             const avatarText = userData.name ? userData.name.charAt(0).toUpperCase() : '?';
             document.getElementById('profileAvatar').textContent = avatarText;
             document.getElementById('userAvatar').textContent = avatarText;
             document.getElementById('profileName').textContent = userData.name || 'Гость';
             document.getElementById('profilePhone').textContent = userData.phone || 'Не указан';
             
-            // Обновляем статистику
             document.getElementById('statOrders').textContent = userData.orders.length;
             document.getElementById('statFavorites').textContent = userData.favorites.length;
             document.getElementById('statViewed').textContent = userData.viewed.length;
@@ -4783,12 +4709,10 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
         }
 
         function switchPage(pageId) {
-            // Обновляем навигацию
             document.querySelectorAll('.nav-item').forEach(item => {
                 item.classList.remove('active');
             });
             
-            // Находим соответствующий пункт меню
             const navItems = document.querySelectorAll('.nav-item');
             const pageNavMap = {
                 'home': 'Главная',
@@ -4808,7 +4732,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 }
             });
             
-            // Показываем выбранную страницу
             document.querySelectorAll('.page').forEach(page => {
                 page.classList.remove('active');
             });
@@ -4817,7 +4740,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             if (targetPage) {
                 targetPage.classList.add('active');
                 
-                // Загружаем контент для страницы
                 switch(pageId) {
                     case 'home':
                         loadMainCategories();
@@ -4843,7 +4765,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
         }
 
         function switchProfileTab(tabId) {
-            // Обновляем табы
             document.querySelectorAll('#profileTabs .tab').forEach(tab => {
                 tab.classList.remove('active');
             });
@@ -4852,7 +4773,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 content.classList.remove('active');
             });
             
-            // Активируем выбранный таб
             const activeTab = Array.from(document.querySelectorAll('#profileTabs .tab')).find(tab => 
                 tab.textContent.includes(tabId === 'stats' ? 'Статистика' : 
                                         tabId === 'orders' ? 'Заказы' : 'Настройки')
@@ -4904,7 +4824,10 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             });
         }
 
-        // Admin Panel Functions
+        // ==============================================
+        // НОВЫЕ ФУНКЦИИ ДЛЯ РАСШИРЕННОЙ АДМИН-ПАНЕЛИ
+        // ==============================================
+
         function setupAdminPanel() {
             document.getElementById('closeAdmin').onclick = closeAdminPanel;
             document.getElementById('adminOverlay').onclick = closeAdminPanel;
@@ -4914,10 +4837,26 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             document.getElementById('adminAddProduct').onclick = addProduct;
             document.getElementById('adminDeleteProductBtn').onclick = deleteProduct;
             document.getElementById('createPromoBtn').onclick = createPromoCode;
+            document.getElementById('addReviewBtn').onclick = addReviewFromAdmin;
+            document.getElementById('addBulkProducts').onclick = addBulkProducts;
+            
+            // Назначаем обработчики изменения селектов для управления размерами и характеристиками
+            document.getElementById('adminProductManage').addEventListener('change', function() {
+                const productId = parseInt(this.value);
+                if (productId) {
+                    loadProductSizes(productId);
+                }
+            });
+            
+            document.getElementById('adminCharProduct').addEventListener('change', function() {
+                const productId = parseInt(this.value);
+                if (productId) {
+                    loadProductCharacteristics(productId);
+                }
+            });
         }
 
         function createAdminToggle() {
-            // Проверяем, не создана ли уже кнопка
             const existingToggle = document.querySelector('.admin-toggle');
             if (existingToggle) {
                 existingToggle.style.display = isAdmin ? 'flex' : 'none';
@@ -4946,15 +4885,28 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             console.log('Админ-панель закрыта');
         }
 
+        // Расширенная функция загрузки данных в админ-панель
         function loadAdminData() {
+            // Получаем все селекты
             const categorySelect = document.getElementById('adminCategorySelect');
             const productCategorySelect = document.getElementById('adminProductCategory');
             const deleteProductSelect = document.getElementById('adminDeleteProduct');
+            const bulkCategorySelect = document.getElementById('adminBulkCategory');
+            const productManageSelect = document.getElementById('adminProductManage');
+            const charProductSelect = document.getElementById('adminCharProduct');
+            const reviewProductSelect = document.getElementById('adminReviewProduct');
             
-            categorySelect.innerHTML = '<option value="">Выберите категорию</option>';
-            productCategorySelect.innerHTML = '<option value="">Категория товара</option>';
-            deleteProductSelect.innerHTML = '<option value="">Выберите товар</option>';
+            // Очищаем все селекты
+            const allSelects = [categorySelect, productCategorySelect, deleteProductSelect, 
+                               bulkCategorySelect, productManageSelect, charProductSelect, reviewProductSelect];
             
+            allSelects.forEach(select => {
+                if (select) {
+                    select.innerHTML = '<option value="">Выберите...</option>';
+                }
+            });
+            
+            // Заполняем категориями
             Object.values(categories).forEach(category => {
                 const option1 = document.createElement('option');
                 option1.value = category.id;
@@ -4965,16 +4917,523 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 option2.value = category.id;
                 option2.textContent = category.name;
                 productCategorySelect.appendChild(option2);
+                
+                const option3 = document.createElement('option');
+                option3.value = category.id;
+                option3.textContent = category.name;
+                bulkCategorySelect.appendChild(option3);
             });
             
+            // Заполняем товарами
             products.forEach(product => {
-                const option = document.createElement('option');
-                option.value = product.id;
-                option.textContent = `${product.name} - ${product.price}₽`;
-                deleteProductSelect.appendChild(option);
+                const option1 = document.createElement('option');
+                option1.value = product.id;
+                option1.textContent = `${product.name} (${product.price}₽)`;
+                deleteProductSelect.appendChild(option1);
+                
+                const option2 = document.createElement('option');
+                option2.value = product.id;
+                option2.textContent = `${product.name}`;
+                productManageSelect.appendChild(option2);
+                
+                const option3 = document.createElement('option');
+                option3.value = product.id;
+                option3.textContent = `${product.name}`;
+                charProductSelect.appendChild(option3);
+                
+                const option4 = document.createElement('option');
+                option4.value = product.id;
+                option4.textContent = `${product.name}`;
+                reviewProductSelect.appendChild(option4);
             });
         }
 
+        // Функция добавления отзыва из админ-панели
+        function addReviewFromAdmin() {
+            const productId = parseInt(document.getElementById('adminReviewProduct').value);
+            const author = document.getElementById('reviewAuthor').value.trim();
+            const rating = parseInt(document.getElementById('reviewRating').value);
+            const text = document.getElementById('reviewText').value.trim();
+            
+            if (!productId || !author || !rating || !text) {
+                showNotification('Заполните все поля');
+                return;
+            }
+            
+            if (rating < 1 || rating > 5) {
+                showNotification('Рейтинг должен быть от 1 до 5');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Товар не найден');
+                return;
+            }
+            
+            // Инициализируем массив отзывов если его нет
+            if (!product.reviews) {
+                product.reviews = [];
+            }
+            
+            // Добавляем отзыв
+            const newReview = {
+                id: Date.now(),
+                author: author,
+                rating: rating,
+                date: new Date().toISOString(),
+                text: text
+            };
+            
+            product.reviews.push(newReview);
+            
+            // Обновляем количество отзывов и рейтинг
+            product.reviewsCount = product.reviews.length;
+            
+            // Пересчитываем средний рейтинг
+            const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+            product.rating = parseFloat((totalRating / product.reviewsCount).toFixed(1));
+            
+            // Сохраняем изменения
+            saveProducts();
+            
+            // Очищаем форму
+            document.getElementById('reviewAuthor').value = '';
+            document.getElementById('reviewRating').value = '';
+            document.getElementById('reviewText').value = '';
+            
+            showNotification(`Отзыв добавлен к товару "${product.name}"`);
+        }
+
+        // Функция просмотра отзывов товара
+        function viewProductReviews() {
+            const productId = parseInt(document.getElementById('adminReviewProduct').value);
+            
+            if (!productId) {
+                showNotification('Выберите товар');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Товар не найден');
+                return;
+            }
+            
+            const reviews = product.reviews || [];
+            
+            let html = `<h3>Отзывы товара: ${product.name}</h3>`;
+            
+            if (reviews.length === 0) {
+                html += '<p>Отзывов пока нет</p>';
+            } else {
+                html += '<div style="max-height: 400px; overflow-y: auto;">';
+                reviews.forEach(review => {
+                    html += `
+                        <div style="border: 1px solid var(--border); border-radius: 8px; padding: 10px; margin-bottom: 10px;">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px;">
+                                <strong>${review.author}</strong>
+                                <div style="color: #FFD700;">
+                                    ${'★'.repeat(review.rating)}${'☆'.repeat(5 - review.rating)}
+                                </div>
+                            </div>
+                            <div style="font-size: 12px; color: var(--gray); margin-bottom: 5px;">
+                                ${new Date(review.date).toLocaleDateString('ru-RU')}
+                            </div>
+                            <div>${review.text}</div>
+                            <button onclick="deleteReview(${productId}, ${review.id})" 
+                                    style="background: var(--secondary); color: white; border: none; border-radius: 4px; padding: 4px 8px; margin-top: 5px; cursor: pointer;">
+                                Удалить отзыв
+                            </button>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+            }
+            
+            document.getElementById('reviewsList').innerHTML = html;
+            document.getElementById('reviewsModal').classList.add('active');
+        }
+
+        function deleteReview(productId, reviewId) {
+            if (!confirm('Удалить этот отзыв?')) return;
+            
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.reviews) return;
+            
+            product.reviews = product.reviews.filter(r => r.id !== reviewId);
+            product.reviewsCount = product.reviews.length;
+            
+            // Пересчитываем рейтинг
+            if (product.reviews.length > 0) {
+                const totalRating = product.reviews.reduce((sum, review) => sum + review.rating, 0);
+                product.rating = parseFloat((totalRating / product.reviews.length).toFixed(1));
+            } else {
+                product.rating = 0;
+            }
+            
+            saveProducts();
+            viewProductReviews();
+            showNotification('Отзыв удален');
+        }
+
+        function closeReviewsModal() {
+            document.getElementById('reviewsModal').classList.remove('active');
+        }
+
+        // Функция добавления товаров пакетами
+        function addBulkProducts() {
+            const categoryId = document.getElementById('adminBulkCategory').value;
+            const bulkText = document.getElementById('bulkProducts').value.trim();
+            
+            if (!categoryId || !bulkText) {
+                showNotification('Выберите категорию и введите данные');
+                return;
+            }
+            
+            if (!categories[categoryId]) {
+                showNotification('Категория не найдена');
+                return;
+            }
+            
+            try {
+                // Парсим JSON (используем одинарные кавычки в примере, заменяем их на двойные)
+                const jsonText = bulkText.replace(/'/g, '"');
+                const productsData = JSON.parse(jsonText);
+                
+                if (!Array.isArray(productsData)) {
+                    throw new Error('Данные должны быть массивом');
+                }
+                
+                let addedCount = 0;
+                let skippedCount = 0;
+                
+                productsData.forEach(productData => {
+                    // Проверяем обязательные поля
+                    if (!productData.name || !productData.price) {
+                        skippedCount++;
+                        return;
+                    }
+                    
+                    // Создаем ID для нового товара
+                    const newId = products.length > 0 ? Math.max(...products.map(p => p.id)) + 1 : 1;
+                    
+                    // Создаем полный объект товара
+                    const newProduct = {
+                        id: newId,
+                        name: productData.name,
+                        brand: productData.brand || 'UNICORN',
+                        price: parseInt(productData.price),
+                        oldPrice: productData.oldPrice ? parseInt(productData.oldPrice) : Math.round(productData.price * 1.2),
+                        discount: productData.discount || Math.floor(Math.random() * 30) + 10,
+                        category: categoryId,
+                        image: productData.image || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80',
+                        images: [productData.image || 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80'],
+                        description: productData.description || productData.name,
+                        characteristics: productData.characteristics || {
+                            "Материал": "Хлопок 100%",
+                            "Производство": "Россия",
+                            "Гарантия": "30 дней"
+                        },
+                        sizes: productData.sizes || ["S", "M", "L", "XL"],
+                        availableSizes: productData.availableSizes || ["S", "M", "L"],
+                        materials: productData.materials || "Хлопок 100%",
+                        colors: productData.colors || ["Черный", "Белый", "Серый"],
+                        rating: 4.5,
+                        reviewsCount: 0,
+                        inStock: true,
+                        deliveryTime: "1-3 дня",
+                        warranty: "30 дней",
+                        reviews: []
+                    };
+                    
+                    products.push(newProduct);
+                    addedCount++;
+                });
+                
+                saveProducts();
+                loadAdminData();
+                
+                showNotification(`Добавлено ${addedCount} товаров. Пропущено: ${skippedCount}`);
+                
+                // Очищаем текстовое поле
+                document.getElementById('bulkProducts').value = '';
+                
+            } catch (error) {
+                console.error('Ошибка парсинга JSON:', error);
+                showNotification('Ошибка формата данных. Проверьте синтаксис JSON');
+            }
+        }
+
+        // Функции для управления размерами товара
+        function loadProductSizes(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            // Показываем секцию управления размерами
+            document.getElementById('sizeManagementSection').style.display = 'block';
+            
+            // Заполняем список доступных размеров
+            const sizesList = document.getElementById('availableSizesList');
+            const sizes = product.sizes || [];
+            const availableSizes = product.availableSizes || [];
+            
+            let html = '<div class="size-list">';
+            
+            if (sizes.length === 0) {
+                html += '<p>Размеры не указаны</p>';
+            } else {
+                sizes.forEach(size => {
+                    const isAvailable = availableSizes.includes(size);
+                    html += `
+                        <div class="size-tag" style="background: ${isAvailable ? '#e8f5e9' : '#ffe6e6'}">
+                            ${size}
+                            <span class="remove-size" onclick="removeSizeFromList(${productId}, '${size}')">
+                                <i class="fas fa-times"></i>
+                            </span>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += '</div>';
+            sizesList.innerHTML = html;
+        }
+
+        function addProductSize() {
+            const productId = parseInt(document.getElementById('adminProductManage').value);
+            const newSize = document.getElementById('newSize').value.trim();
+            
+            if (!productId || !newSize) {
+                showNotification('Выберите товар и введите размер');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Товар не найден');
+                return;
+            }
+            
+            // Инициализируем массивы если их нет
+            if (!product.sizes) product.sizes = [];
+            if (!product.availableSizes) product.availableSizes = [];
+            
+            // Проверяем, есть ли уже такой размер
+            if (product.sizes.includes(newSize)) {
+                showNotification('Этот размер уже существует');
+                return;
+            }
+            
+            // Добавляем размер
+            product.sizes.push(newSize);
+            product.availableSizes.push(newSize);
+            
+            saveProducts();
+            loadProductSizes(productId);
+            
+            document.getElementById('newSize').value = '';
+            showNotification(`Размер "${newSize}" добавлен`);
+        }
+
+        function removeProductSize() {
+            const productId = parseInt(document.getElementById('adminProductManage').value);
+            const sizeToRemove = document.getElementById('removeSize').value.trim();
+            
+            if (!productId || !sizeToRemove) {
+                showNotification('Выберите товар и введите размер');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.sizes) {
+                showNotification('Товар не найден или размеры не указаны');
+                return;
+            }
+            
+            // Удаляем размер из обоих массивов
+            product.sizes = product.sizes.filter(s => s !== sizeToRemove);
+            if (product.availableSizes) {
+                product.availableSizes = product.availableSizes.filter(s => s !== sizeToRemove);
+            }
+            
+            saveProducts();
+            loadProductSizes(productId);
+            
+            document.getElementById('removeSize').value = '';
+            showNotification(`Размер "${sizeToRemove}" удален`);
+        }
+
+        function removeSizeFromList(productId, size) {
+            if (!confirm(`Удалить размер ${size}?`)) return;
+            
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.sizes) return;
+            
+            product.sizes = product.sizes.filter(s => s !== size);
+            if (product.availableSizes) {
+                product.availableSizes = product.availableSizes.filter(s => s !== size);
+            }
+            
+            saveProducts();
+            loadProductSizes(productId);
+            showNotification(`Размер "${size}" удален`);
+        }
+
+        // Функция применения правил для размеров аксессуаров
+        function applySizeRules() {
+            const hideSizes = document.getElementById('hideSizesForAccessories').checked;
+            
+            // Обновляем все товары в категории аксессуары
+            const accessoryProducts = products.filter(p => p.category === 'accessories');
+            
+            accessoryProducts.forEach(product => {
+                if (hideSizes) {
+                    // Удаляем размеры у аксессуаров
+                    product.sizes = [];
+                    product.availableSizes = [];
+                } else {
+                    // Добавляем стандартные размеры если их нет
+                    if (!product.sizes || product.sizes.length === 0) {
+                        product.sizes = ['OSFA', 'Универсальный'];
+                        product.availableSizes = ['OSFA', 'Универсальный'];
+                    }
+                }
+            });
+            
+            saveProducts();
+            
+            // Перезагружаем данные если нужно
+            const selectedProductId = parseInt(document.getElementById('adminProductManage').value);
+            if (selectedProductId) {
+                const selectedProduct = products.find(p => p.id === selectedProductId);
+                if (selectedProduct && selectedProduct.category === 'accessories') {
+                    loadProductSizes(selectedProductId);
+                }
+            }
+            
+            showNotification(`Правило для аксессуаров ${hideSizes ? 'применено' : 'отключено'}`);
+        }
+
+        // Функции для управления характеристиками
+        function loadProductCharacteristics(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            // Показываем секцию управления характеристиками
+            document.getElementById('characteristicManagement').style.display = 'block';
+            
+            // Заполняем список характеристик
+            const charList = document.getElementById('characteristicsList');
+            const characteristics = product.characteristics || {};
+            
+            let html = '<div class="char-list">';
+            
+            if (Object.keys(characteristics).length === 0) {
+                html += '<p>Характеристики не указаны</p>';
+            } else {
+                Object.entries(characteristics).forEach(([key, value]) => {
+                    html += `
+                        <div class="char-tag">
+                            <div>
+                                <strong>${key}:</strong> ${value}
+                            </div>
+                            <button onclick="removeCharFromList(${productId}, '${key}')" 
+                                    style="background: var(--secondary); color: white; border: none; border-radius: 4px; padding: 4px 8px; cursor: pointer;">
+                                Удалить
+                            </button>
+                        </div>
+                    `;
+                });
+            }
+            
+            html += '</div>';
+            charList.innerHTML = html;
+        }
+
+        function addCharacteristic() {
+            const productId = parseInt(document.getElementById('adminCharProduct').value);
+            const charName = document.getElementById('charName').value.trim();
+            const charValue = document.getElementById('charValue').value.trim();
+            
+            if (!productId || !charName || !charValue) {
+                showNotification('Заполните все поля');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Товар не найден');
+                return;
+            }
+            
+            // Инициализируем характеристики если их нет
+            if (!product.characteristics) {
+                product.characteristics = {};
+            }
+            
+            // Добавляем или обновляем характеристику
+            product.characteristics[charName] = charValue;
+            
+            // Сохраняем изменения
+            saveProducts();
+            loadProductCharacteristics(productId);
+            
+            // Очищаем поля
+            document.getElementById('charName').value = '';
+            document.getElementById('charValue').value = '';
+            
+            showNotification(`Характеристика "${charName}" добавлена`);
+        }
+
+        function removeCharacteristic() {
+            const productId = parseInt(document.getElementById('adminCharProduct').value);
+            const charName = document.getElementById('removeCharName').value.trim();
+            
+            if (!productId || !charName) {
+                showNotification('Заполните поле');
+                return;
+            }
+            
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.characteristics) {
+                showNotification('Характеристики не найдены');
+                return;
+            }
+            
+            if (!product.characteristics[charName]) {
+                showNotification('Характеристика не найдена');
+                return;
+            }
+            
+            // Удаляем характеристику
+            delete product.characteristics[charName];
+            
+            saveProducts();
+            loadProductCharacteristics(productId);
+            
+            document.getElementById('removeCharName').value = '';
+            showNotification(`Характеристика "${charName}" удалена`);
+        }
+
+        function removeCharFromList(productId, charName) {
+            if (!confirm(`Удалить характеристику "${charName}"?`)) return;
+            
+            const product = products.find(p => p.id === productId);
+            if (!product || !product.characteristics) return;
+            
+            delete product.characteristics[charName];
+            
+            saveProducts();
+            loadProductCharacteristics(productId);
+            showNotification(`Характеристика "${charName}" удалена`);
+        }
+
+        function saveCharacteristics() {
+            showNotification('Характеристики сохранены автоматически при изменении');
+        }
+
+        // Существующие функции админ-панели (остаются без изменений)
         function updateCategoryImage() {
             const categoryId = document.getElementById('adminCategorySelect').value;
             const imageUrl = document.getElementById('adminCategoryImage').value.trim();
@@ -5082,7 +5541,8 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 reviewsCount: 0,
                 inStock: true,
                 deliveryTime: "1-3 дня",
-                warranty: "30 дней"
+                warranty: "30 дней",
+                reviews: []
             };
             
             products.push(newProduct);
@@ -5117,7 +5577,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             products.splice(productIndex, 1);
             saveProducts();
             
-            // Удаляем из избранного у всех пользователей
             const users = JSON.parse(localStorage.getItem('unicorn_users')) || {};
             Object.values(users).forEach(user => {
                 user.favorites = user.favorites.filter(favId => favId !== productId);
@@ -5125,7 +5584,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             });
             localStorage.setItem('unicorn_users', JSON.stringify(users));
             
-            // Обновляем текущего пользователя
             if (userData) {
                 userData.favorites = userData.favorites.filter(favId => favId !== productId);
                 userData.cart = userData.cart.filter(item => item.id !== productId);
@@ -5160,7 +5618,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 return;
             }
             
-            // Проверяем уникальность кода
             const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
             if (promoCodes.some(p => p.code === code)) {
                 showNotification('Промокод с таким кодом уже существует');
@@ -5182,7 +5639,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             
             showNotification(`Промокод "${code}" создан! Скидка: ${discount}%`);
             
-            // Очищаем поля
             document.getElementById('promoCode').value = '';
             document.getElementById('promoDiscount').value = '';
             document.getElementById('promoMaxUses').value = '';
@@ -5324,7 +5780,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             document.getElementById('usersModal').classList.remove('active');
         }
 
-        // Функции для работы с данными
         function exportData() {
             const data = {
                 categories: categories,
@@ -5410,7 +5865,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
 
         function resetData() {
             if (confirm('ВНИМАНИЕ! Это удалит ВСЕ данные (категории, товары, пользователей, заказы). Продолжить?')) {
-                // Сохраняем сессию текущего пользователя
                 const currentSession = {
                     userId: currentUserId,
                     telegramUsername: telegramUsername,
@@ -5421,23 +5875,18 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                     favorites: userData.favorites
                 };
                 
-                // Очищаем localStorage
                 localStorage.clear();
                 
-                // Восстанавливаем сессию
                 localStorage.setItem('unicorn_session', JSON.stringify(currentSession));
                 
-                // Восстанавливаем базовые данные
                 categories = JSON.parse(JSON.stringify(defaultCategories));
                 products = JSON.parse(JSON.stringify(defaultProducts));
                 
                 localStorage.setItem('unicorn_categories', JSON.stringify(categories));
                 localStorage.setItem('unicorn_products', JSON.stringify(products));
                 
-                // Восстанавливаем пользователя
                 if (currentUserId) {
                     userData = createNewUserData(currentUserId);
-                    // Восстанавливаем корзину и избранное из сессии
                     userData.cart = currentSession.cart || [];
                     userData.favorites = currentSession.favorites || [];
                     saveUserData();
@@ -5577,15 +6026,12 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             if (window.Telegram && window.Telegram.WebApp) {
                 const tg = window.Telegram.WebApp;
                 
-                // Расширяем на весь экран
                 tg.expand();
                 
-                // Получаем данные пользователя
                 const user = tg.initDataUnsafe.user;
                 if (user) {
                     console.log('Telegram данные получены:', user);
                     
-                    // Устанавливаем данные из Telegram
                     if (user.username) {
                         telegramUsername = user.username;
                         localStorage.setItem('unicorn_telegramUsername', user.username);
@@ -5603,22 +6049,17 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                         localStorage.setItem('unicorn_telegramId', telegramUserId);
                     }
                     
-                    // Обновляем хэш в URL
                     if (telegramUserId) {
                         window.location.hash = `profile-${telegramUserId}`;
                     }
                     
-                    // Обновляем данные пользователя если приложение уже инициализировано
                     if (isInitialized) {
-                        // Перезагружаем пользователя с новыми Telegram данными
                         userData = getUserData(currentUserId);
                         
-                        // Обновляем UI
                         updateProfileUI();
                         updateCartBadge();
                         updateFavoritesBadge();
                         
-                        // Перепроверяем админские права
                         const wasAdmin = isAdmin;
                         isAdmin = checkAdminRights();
                         
@@ -5629,15 +6070,12 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                             }
                         }
                         
-                        // Сохраняем сессию
                         saveUserSession();
                     }
                 }
                 
-                // НЕ меняем тему и фон - исправление!
                 console.log('Telegram Web App инициализирован (тема не изменяется)');
                 
-                // Показываем кнопку админ-панели если пользователь админ
                 if (user && (user.id.toString() === ADMIN_USER_ID || user.username === 'barizhka')) {
                     isAdmin = true;
                     checkAndShowAdminButton();
@@ -5646,7 +6084,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             } else {
                 console.log('Telegram Web App не обнаружен, работаем в обычном режиме');
                 
-                // Для тестирования админки
                 if (currentUserId === ADMIN_USER_ID) {
                     isAdmin = true;
                     checkAndShowAdminButton();
@@ -5655,12 +6092,9 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             }
         }
 
-        // Инициализируем Telegram Web App при загрузке
         if (window.Telegram && window.Telegram.WebApp) {
-            // Запускаем инициализацию сразу
             initTelegramWebApp();
         } else {
-            // Пробуем загрузить скрипт Telegram Web App
             const script = document.createElement('script');
             script.src = 'https://telegram.org/js/telegram-web-app.js';
             script.onload = function() {
@@ -5673,7 +6107,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             document.head.appendChild(script);
         }
 
-        // Обработка ошибок изображений
         window.addEventListener('error', function(e) {
             if (e.target.tagName === 'IMG') {
                 e.target.src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400"><rect width="400" height="400" fill="%238A2BE2"/><text x="200" y="200" font-family="Inter" font-size="24" fill="white" text-anchor="middle" dy=".3em">Изображение</text></svg>';
@@ -5681,7 +6114,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             }
         }, true);
 
-        // Сохраняем сессию при закрытии страницы
         window.addEventListener('beforeunload', function() {
             saveUserSession();
         });
