@@ -2055,6 +2055,11 @@
                 
                 if (hash.includes('profile-')) {
                     userIdFromHash = hash.split('profile-')[1];
+                    // ОЧИЩАЕМ старый ID если есть новый из URL
+                    if (localStorage.getItem('unicorn_userId') && localStorage.getItem('unicorn_userId') !== userIdFromHash) {
+                        console.log('Обнаружен новый ID из URL, очищаем данные сессии');
+                        localStorage.removeItem('telegram_init_data');
+                    }
                 }
                 
                 // Проверяем сохраненный userId в localStorage
@@ -2090,7 +2095,7 @@
                     telegramLastName = savedTelegramLastName;
                 }
                 
-                // Проверяем админские права
+                // Проверяем админские права - ФИКС: проверяем после установки currentUserId
                 isAdmin = checkAdminRights();
                 
                 // Загружаем данные пользователя
@@ -2123,8 +2128,9 @@
         }
 
         function checkAdminRights() {
-            // Проверяем ID пользователя
-            if (currentUserId === ADMIN_USER_ID.toString()) {
+            // Проверяем ID пользователя - ФИКС: правильное сравнение
+            if (currentUserId === ADMIN_USER_ID || currentUserId === ADMIN_USER_ID.toString()) {
+                console.log('Пользователь является администратором по ID');
                 return true;
             }
             
@@ -2132,11 +2138,23 @@
             if (window.Telegram && window.Telegram.WebApp) {
                 const tg = window.Telegram.WebApp;
                 const user = tg.initDataUnsafe.user;
-                if (user && user.id === parseInt(ADMIN_USER_ID)) {
+                if (user && (user.id.toString() === ADMIN_USER_ID || user.id === parseInt(ADMIN_USER_ID))) {
+                    console.log('Пользователь является администратором по Telegram ID');
                     return true;
                 }
             }
             
+            // Дополнительная проверка по username
+            if (telegramUsername === 'barizhka' || telegramUsername === 'admin') {
+                console.log('Пользователь является администратором по username');
+                return true;
+            }
+            
+            console.log('Пользователь НЕ является администратором', {
+                currentUserId,
+                ADMIN_USER_ID,
+                telegramUsername
+            });
             return false;
         }
 
@@ -2234,6 +2252,7 @@
                     };
                     
                     localStorage.setItem('unicorn_users', JSON.stringify(users));
+                    console.log('Создан новый пользователь:', userId, displayName);
                 } else {
                     // Обновляем время последней активности
                     users[userId].lastActive = new Date().toISOString();
@@ -2260,6 +2279,7 @@
                     }
                     
                     localStorage.setItem('unicorn_users', JSON.stringify(users));
+                    console.log('Загружен существующий пользователь:', userId, users[userId].name);
                 }
                 
                 return users[userId];
@@ -2311,6 +2331,7 @@
                 const users = JSON.parse(localStorage.getItem('unicorn_users')) || {};
                 users[currentUserId] = userData;
                 localStorage.setItem('unicorn_users', JSON.stringify(users));
+                console.log('Данные пользователя сохранены:', currentUserId);
             } catch (error) {
                 console.error('Ошибка сохранения пользователя:', error);
             }
@@ -2342,6 +2363,24 @@
             
             // Добавляем обработчик изменений hash
             window.addEventListener('hashchange', handleHashChange);
+            
+            // Проверяем и показываем админ-кнопку
+            checkAndShowAdminButton();
+        }
+
+        function checkAndShowAdminButton() {
+            const adminToggle = document.querySelector('.admin-toggle');
+            if (isAdmin) {
+                if (!adminToggle) {
+                    createAdminToggle();
+                } else {
+                    adminToggle.style.display = 'flex';
+                }
+                console.log('Админ-кнопка показана');
+            } else if (adminToggle) {
+                adminToggle.style.display = 'none';
+                console.log('Админ-кнопка скрыта');
+            }
         }
 
         function handleHashChange() {
@@ -2351,19 +2390,27 @@
             if (hash.includes('profile-')) {
                 const userId = hash.split('profile-')[1];
                 if (userId && userId !== currentUserId) {
+                    console.log('Смена пользователя по хэшу:', userId);
                     currentUserId = decodeURIComponent(userId);
                     localStorage.setItem('unicorn_userId', currentUserId);
                     userData = getUserData(currentUserId);
+                    
+                    // Перепроверяем админские права
+                    const wasAdmin = isAdmin;
                     isAdmin = checkAdminRights();
+                    
                     updateProfileUI();
                     updateCartBadge();
                     updateFavoritesBadge();
                     
-                    // Показываем/скрываем админскую кнопку
-                    const adminToggle = document.querySelector('.admin-toggle');
-                    if (adminToggle) {
-                        adminToggle.style.display = isAdmin ? 'flex' : 'none';
+                    // Обновляем админ-кнопку если статус изменился
+                    if (wasAdmin !== isAdmin) {
+                        checkAndShowAdminButton();
                     }
+                    
+                    // Перезагружаем текущую страницу
+                    const activePage = document.querySelector('.page.active').id;
+                    switchPage(activePage);
                 }
             }
         }
@@ -3586,7 +3633,11 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
 
         function createAdminToggle() {
             // Проверяем, не создана ли уже кнопка
-            if (document.querySelector('.admin-toggle')) return;
+            const existingToggle = document.querySelector('.admin-toggle');
+            if (existingToggle) {
+                existingToggle.style.display = isAdmin ? 'flex' : 'none';
+                return;
+            }
             
             const adminToggle = document.createElement('button');
             adminToggle.className = 'admin-toggle';
@@ -3594,17 +3645,20 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             adminToggle.onclick = openAdminPanel;
             adminToggle.style.display = isAdmin ? 'flex' : 'none';
             document.body.appendChild(adminToggle);
+            console.log('Админ-кнопка создана');
         }
 
         function openAdminPanel() {
             document.getElementById('adminPanel').classList.add('active');
             document.getElementById('adminOverlay').classList.add('active');
             loadAdminData();
+            console.log('Админ-панель открыта');
         }
 
         function closeAdminPanel() {
             document.getElementById('adminPanel').classList.remove('active');
             document.getElementById('adminOverlay').classList.remove('active');
+            console.log('Админ-панель закрыта');
         }
 
         function loadAdminData() {
@@ -3923,7 +3977,7 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 let html = '<div style="display: flex; flex-direction: column; gap: 10px;">';
                 
                 Object.values(users).forEach(user => {
-                    const created = new Date(user.created);
+                    const created = new Date(user.createdAt);
                     const lastActive = new Date(user.lastActive);
                     
                     html += `
@@ -4239,10 +4293,24 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                         localStorage.setItem('unicorn_telegramLastName', user.last_name);
                     }
                     
+                    console.log('Telegram данные получены:', {
+                        username: telegramUsername,
+                        firstName: telegramFirstName,
+                        lastName: telegramLastName
+                    });
+                    
                     // Обновляем данные пользователя если приложение уже инициализировано
                     if (isInitialized && userData) {
                         updateUserFromTelegram();
                         updateProfileUI();
+                        
+                        // Перепроверяем админские права
+                        const wasAdmin = isAdmin;
+                        isAdmin = checkAdminRights();
+                        
+                        if (wasAdmin !== isAdmin) {
+                            checkAndShowAdminButton();
+                        }
                     }
                 }
                 
@@ -4253,11 +4321,10 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 }
                 
                 // Устанавливаем кнопку админ-панели для администратора
-                if (user && user.id === parseInt(ADMIN_USER_ID)) {
+                if (user && (user.id.toString() === ADMIN_USER_ID || user.username === 'barizhka')) {
                     isAdmin = true;
-                    if (!document.querySelector('.admin-toggle')) {
-                        createAdminToggle();
-                    }
+                    checkAndShowAdminButton();
+                    console.log('Telegram администратор обнаружен');
                 }
             }
         }
@@ -4269,10 +4336,11 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             // Для отладки вне Telegram
             console.log('Telegram Web App не обнаружен, работаем в обычном режиме');
             
-            // Для тестирования админки
-            if (currentUserId === ADMIN_USER_ID.toString()) {
+            // Для тестирования админки - добавьте свой ID вручную
+            if (currentUserId === ADMIN_USER_ID || currentUserId === '6644058285') {
                 isAdmin = true;
                 createAdminToggle();
+                console.log('Администратор по ID активирован в режиме отладки');
             }
         }
 
