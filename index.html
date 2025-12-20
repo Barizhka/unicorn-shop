@@ -471,6 +471,7 @@
             transition: transform 0.2s ease;
             position: relative;
             width: 100%;
+            cursor: pointer;
         }
 
         .product-card:active {
@@ -1570,6 +1571,412 @@
             align-items: center;
             gap: 5px;
         }
+
+        /* Product Page Styles */
+        .product-page-header {
+            background: white;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+        }
+
+        .product-image-main {
+            width: 100%;
+            height: 300px;
+            object-fit: contain;
+            background: var(--light-gray);
+            display: block;
+        }
+
+        .product-images-thumbnails {
+            display: flex;
+            gap: 10px;
+            padding: 10px;
+            overflow-x: auto;
+        }
+
+        .product-thumbnail {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: border-color 0.2s ease;
+        }
+
+        .product-thumbnail.active {
+            border-color: var(--primary);
+        }
+
+        .product-info {
+            padding: 20px;
+        }
+
+        .product-title-large {
+            font-size: 22px;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .product-brand-large {
+            font-size: 14px;
+            color: var(--gray);
+            margin-bottom: 12px;
+            font-weight: 500;
+        }
+
+        .product-price-large {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .current-price-large {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .old-price-large {
+            font-size: 16px;
+            color: var(--gray);
+            text-decoration: line-through;
+        }
+
+        .discount-large {
+            color: var(--secondary);
+            font-size: 14px;
+            font-weight: 600;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 4px 10px;
+            border-radius: 6px;
+        }
+
+        .size-selector {
+            margin-bottom: 20px;
+        }
+
+        .size-label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .size-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .size-btn {
+            width: 40px;
+            height: 40px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .size-btn:hover {
+            border-color: var(--primary);
+        }
+
+        .size-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .size-btn.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            background: var(--light-gray);
+        }
+
+        .size-chart-link {
+            display: block;
+            margin-top: 8px;
+            color: var(--primary);
+            font-size: 13px;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .quantity-selector {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .quantity-label {
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .quantity-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn-large {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            border: 1px solid var(--border);
+            background: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            transition: background 0.2s ease;
+        }
+
+        .quantity-btn-large:active {
+            background: var(--light);
+        }
+
+        .quantity-value {
+            font-weight: 600;
+            font-size: 16px;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .buy-now-btn {
+            flex: 2;
+            padding: 15px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: background 0.2s ease;
+        }
+
+        .buy-now-btn:active {
+            background: var(--primary-light);
+            transform: scale(0.98);
+        }
+
+        .add-to-cart-large {
+            flex: 1;
+            padding: 15px;
+            background: var(--light);
+            color: var(--dark);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+
+        .add-to-cart-large:active {
+            background: var(--light-gray);
+            transform: scale(0.98);
+        }
+
+        .add-to-cart-large.added {
+            background: var(--success);
+            color: white;
+            border-color: var(--success);
+        }
+
+        .product-tabs {
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            overflow: hidden;
+        }
+
+        .product-tab-content {
+            padding: 20px;
+        }
+
+        .product-description {
+            font-size: 14px;
+            line-height: 1.6;
+            color: var(--dark);
+        }
+
+        .product-specs {
+            display: grid;
+            gap: 12px;
+        }
+
+        .spec-item {
+            display: flex;
+            justify-content: space-between;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .spec-label {
+            color: var(--gray);
+            font-size: 14px;
+        }
+
+        .spec-value {
+            font-weight: 500;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .reviews-section {
+            margin-top: 20px;
+        }
+
+        .review-item {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--light-gray);
+        }
+
+        .review-item:last-child {
+            border-bottom: none;
+        }
+
+        .review-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .review-author {
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .review-date {
+            color: var(--gray);
+            font-size: 12px;
+        }
+
+        .review-rating {
+            color: var(--accent);
+            margin-bottom: 8px;
+        }
+
+        .review-text {
+            font-size: 13px;
+            line-height: 1.5;
+            color: var(--dark);
+        }
+
+        .similar-products {
+            margin-top: 30px;
+        }
+
+        .reviews-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .add-review-btn {
+            padding: 8px 16px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .add-review-btn:active {
+            background: var(--primary-light);
+            transform: scale(0.98);
+        }
+
+        .delivery-info {
+            background: var(--light);
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .delivery-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            margin-bottom: 12px;
+        }
+
+        .delivery-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .delivery-icon {
+            color: var(--primary);
+            font-size: 16px;
+            margin-top: 2px;
+        }
+
+        .delivery-text {
+            font-size: 13px;
+            line-height: 1.4;
+        }
+
+        .delivery-text strong {
+            font-weight: 600;
+            color: var(--dark);
+        }
+
+        .rating-stars {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .rating-stars i {
+            color: #FFD700;
+        }
+
+        .rating-value {
+            margin-left: 8px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .rating-count {
+            color: var(--gray);
+            font-size: 13px;
+            margin-left: 4px;
+        }
     </style>
 </head>
 <body>
@@ -1606,6 +2013,7 @@
                 <option value="">Категория товара</option>
             </select>
             <input type="text" class="admin-input" id="adminProductImage" placeholder="URL картинки">
+            <input type="text" class="admin-input" id="adminProductDescription" placeholder="Описание товара">
             <button class="admin-btn" id="adminAddProduct">Добавить товар</button>
         </div>
         
@@ -1751,6 +2159,20 @@
 
                 <div class="products-grid" id="popularProducts">
                     <!-- Products will be loaded here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Product Page -->
+        <div id="product-page" class="page">
+            <div class="container">
+                <button class="back-button" onclick="goBackFromProduct()">
+                    <i class="fas fa-arrow-left"></i>
+                    Назад
+                </button>
+                
+                <div id="productPageContent">
+                    <!-- Product page content will be loaded here -->
                 </div>
             </div>
         </div>
@@ -1986,7 +2408,20 @@
                 discount: 19,
                 category: "shoes",
                 image: "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                description: "Классические кроссовки белого цвета"
+                images: [
+                    "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1600185365926-3a2ce3cdb9eb?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1600185365483-8c21ba5c6bcf?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                ],
+                description: "Классические кроссовки белого цвета. Модель Air Force 1 — это икона стиля, которая остается актуальной уже несколько десятилетий. Кроссовки выполнены из натуральной кожи, имеют удобную амортизирующую подошву и фирменную подкладку Nike Air.",
+                details: "Кроссовки Nike Air Force 1 '07 — это обновленная версия классической баскетбольной обуви. Особенности:\n• Верх из натуральной кожи\n• Амортизирующая подошва с технологией Nike Air\n• Классическая шнуровка\n• Логотип Nike на язычке и пятке\n• Стелька OrthoLite для комфорта",
+                sizes: ["36", "37", "38", "39", "40", "41", "42", "43", "44", "45"],
+                availableSizes: ["36", "37", "38", "39", "40", "41", "42", "43"],
+                materials: "Натуральная кожа, текстиль, резина",
+                colors: ["Белый", "Черный"],
+                rating: 4.7,
+                reviewsCount: 128,
+                inStock: true
             },
             {
                 id: 2,
@@ -1997,7 +2432,19 @@
                 discount: 20,
                 category: "men",
                 image: "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                description: "Классические джинсы прямого кроя"
+                images: [
+                    "https://images.unsplash.com/photo-1542272604-787c3835535d?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1541099649105-f69ad21a3246?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                ],
+                description: "Классические джинсы прямого кроя. Модель 501 — это оригинальные джинсы Levi's, которые не выходят из моды уже более 100 лет. Прямой крой, классическая пятикарманная конструкция и фирменная заклепка на заднем кармане.",
+                details: "Джинсы Levi's 501 Original Fit:\n• Прямой крой от бедра до щиколотки\n• Классическая посадка на талии\n• Застежка на молнию и пуговицу\n• 5 карманов\n• 100% хлопок",
+                sizes: ["28", "30", "32", "34", "36", "38", "40"],
+                availableSizes: ["30", "32", "34", "36"],
+                materials: "100% хлопок (деним)",
+                colors: ["Синий", "Черный", "Светло-синий"],
+                rating: 4.5,
+                reviewsCount: 89,
+                inStock: true
             },
             {
                 id: 3,
@@ -2008,7 +2455,19 @@
                 discount: 19,
                 category: "men",
                 image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                description: "Кожаная куртка черного цвета"
+                images: [
+                    "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1551028719-00167b16eac5?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=60"
+                ],
+                description: "Кожаная куртка черного цвета. Стильная и практичная куртка из натуральной кожи, которая станет отличным дополнением к любому образу. Идеально подходит для прохладной погоды.",
+                details: "Кожаная куртка AllSaints:\n• Натуральная кожа овчины\n• Подкладка из вискозы\n• Застежка на молнию\n• 2 внешних и 2 внутренних кармана\n• Регулируемый пояс",
+                sizes: ["S", "M", "L", "XL", "XXL"],
+                availableSizes: ["M", "L", "XL"],
+                materials: "Натуральная кожа, вискоза",
+                colors: ["Черный", "Коричневый"],
+                rating: 4.8,
+                reviewsCount: 45,
+                inStock: true
             },
             {
                 id: 4,
@@ -2019,7 +2478,19 @@
                 discount: 25,
                 category: "women",
                 image: "https://images.unsplash.com/photo-1567095761054-7a02e69e5c43?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
-                description: "Летнее платье с цветочным принтом"
+                images: [
+                    "https://images.unsplash.com/photo-1567095761054-7a02e69e5c43?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80",
+                    "https://images.unsplash.com/photo-1572804013309-59a88b7e92f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80"
+                ],
+                description: "Летнее платье с цветочным принтом. Легкое и воздушное платье из натурального хлопка, идеально подходящее для теплой погоды. Свободный крой и яркий принт создают романтичный образ.",
+                details: "Летнее платье Zara:\n• 100% хлопок\n• Свободный крой\n• Цветочный принт\n• Застежка на спинке\n• Длина миди",
+                sizes: ["XS", "S", "M", "L"],
+                availableSizes: ["XS", "S", "M"],
+                materials: "100% хлопок",
+                colors: ["Белый с цветами", "Голубой с цветами"],
+                rating: 4.6,
+                reviewsCount: 67,
+                inStock: true
             }
         ];
 
@@ -2037,6 +2508,10 @@
         let telegramUserId = '';
         let activePromoCode = null;
         let promoDiscount = 0;
+        let currentProductId = null;
+        let selectedSize = null;
+        let selectedQuantity = 1;
+        let lastPage = 'home';
 
         // Инициализация приложения
         document.addEventListener('DOMContentLoaded', async function() {
@@ -2188,6 +2663,7 @@
                 if (activePage === 'favorites') await loadFavoritesPage();
                 if (activePage === 'profile') loadUserOrders();
                 if (activePage === 'admin-orders') loadAdminOrders();
+                if (activePage === 'product-page') loadProductPage();
                 
                 // Показываем приветствие
                 if (userData.name && userData.name !== 'Гость') {
@@ -2642,6 +3118,14 @@
                 </div>
             `;
             
+            // Добавляем обработчик клика на карточку товара
+            div.addEventListener('click', function(e) {
+                // Проверяем, не кликнули ли на кнопку
+                if (!e.target.closest('.wishlist-btn') && !e.target.closest('.add-to-cart')) {
+                    openProductPage(product.id);
+                }
+            });
+            
             const wishlistBtn = div.querySelector('.wishlist-btn');
             wishlistBtn.addEventListener('click', function(e) {
                 e.stopPropagation();
@@ -2668,34 +3152,419 @@
                 }, 2000);
             });
             
-            div.addEventListener('click', function() {
-                if (!userData.viewed.includes(product.id)) {
-                    userData.viewed.push(product.id);
-                    saveUserData();
-                    updateProfileUI();
-                }
-            });
-            
             return div;
         }
 
-        function toggleFavorite(productId) {
-            const index = userData.favorites.indexOf(productId);
-            if (index > -1) {
-                userData.favorites.splice(index, 1);
-                showNotification('Товар удален из избранного');
-            } else {
-                userData.favorites.push(productId);
-                showNotification('Товар добавлен в избранное');
-            }
-            saveUserData();
-            updateProfileUI();
+        function openProductPage(productId) {
+            currentProductId = productId;
+            lastPage = document.querySelector('.page.active').id;
+            switchPage('product-page');
+            loadProductPage(productId);
         }
 
-        function addToCart(product) {
-            const existingItem = userData.cart.find(item => item.id === product.id);
+        function loadProductPage(productId = currentProductId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) {
+                showNotification('Товар не найден');
+                goBackFromProduct();
+                return;
+            }
+            
+            // Обновляем просмотренные товары
+            if (!userData.viewed.includes(productId)) {
+                userData.viewed.push(productId);
+                saveUserData();
+                updateProfileUI();
+            }
+            
+            const container = document.getElementById('productPageContent');
+            if (!container) return;
+            
+            const isFavorite = userData.favorites.includes(product.id);
+            const inCart = userData.cart.find(item => item.id === product.id);
+            const images = product.images || [product.image];
+            const mainImage = images[0];
+            
+            // Создаем HTML для страницы товара
+            container.innerHTML = `
+                <div class="product-page-header">
+                    <div class="product-images">
+                        <img src="${mainImage}" alt="${product.name}" class="product-image-main" id="mainProductImage">
+                        ${images.length > 1 ? `
+                            <div class="product-images-thumbnails">
+                                ${images.map((img, index) => `
+                                    <img src="${img}" alt="${product.name} - изображение ${index + 1}" 
+                                         class="product-thumbnail ${index === 0 ? 'active' : ''}" 
+                                         data-image="${img}"
+                                         onclick="changeProductImage('${img}', this)">
+                                `).join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="product-info">
+                        <div class="product-brand-large">${product.brand}</div>
+                        <h1 class="product-title-large">${product.name}</h1>
+                        
+                        <div class="rating-stars" style="margin-bottom: 10px;">
+                            ${getRatingStars(product.rating)}
+                            <span class="rating-value">${product.rating}</span>
+                            <span class="rating-count">(${product.reviewsCount} отзывов)</span>
+                        </div>
+                        
+                        <div class="product-price-large">
+                            <span class="current-price-large">${product.price.toLocaleString()} ₽</span>
+                            ${product.oldPrice ? `<span class="old-price-large">${product.oldPrice.toLocaleString()} ₽</span>` : ''}
+                            ${product.discount > 0 ? `<span class="discount-large">-${product.discount}%</span>` : ''}
+                        </div>
+                        
+                        ${!product.inStock ? `
+                            <div style="color: var(--secondary); font-weight: 600; margin-bottom: 20px;">
+                                <i class="fas fa-exclamation-circle"></i> Нет в наличии
+                            </div>
+                        ` : ''}
+                        
+                        ${product.sizes && product.sizes.length > 0 ? `
+                            <div class="size-selector">
+                                <label class="size-label">Размер:</label>
+                                <div class="size-grid" id="sizeGrid">
+                                    ${product.sizes.map(size => `
+                                        <button class="size-btn ${product.availableSizes && !product.availableSizes.includes(size) ? 'disabled' : ''}" 
+                                                data-size="${size}"
+                                                onclick="${product.availableSizes && product.availableSizes.includes(size) ? `selectSize('${size}')` : ''}">
+                                            ${size}
+                                        </button>
+                                    `).join('')}
+                                </div>
+                                <a href="#" class="size-chart-link" onclick="showSizeChart()">Таблица размеров</a>
+                            </div>
+                        ` : ''}
+                        
+                        <div class="quantity-selector">
+                            <span class="quantity-label">Количество:</span>
+                            <div class="quantity-controls">
+                                <button class="quantity-btn-large" onclick="changeQuantity(-1)">-</button>
+                                <span class="quantity-value" id="quantityValue">1</span>
+                                <button class="quantity-btn-large" onclick="changeQuantity(1)">+</button>
+                            </div>
+                        </div>
+                        
+                        <div class="product-actions">
+                            <button class="buy-now-btn" onclick="buyNow(${product.id})" ${!product.inStock ? 'disabled' : ''}>
+                                <i class="fas fa-bolt"></i>
+                                Купить сейчас
+                            </button>
+                            <button class="add-to-cart-large ${inCart ? 'added' : ''}" onclick="addToCartFromProductPage(${product.id})" ${!product.inStock ? 'disabled' : ''}>
+                                <i class="fas fa-${inCart ? 'check' : 'shopping-cart'}"></i>
+                                ${inCart ? 'В корзине' : 'В корзину'}
+                            </button>
+                        </div>
+                        
+                        <div class="delivery-info">
+                            <div class="delivery-item">
+                                <i class="fas fa-shipping-fast delivery-icon"></i>
+                                <div class="delivery-text">
+                                    <strong>Бесплатная доставка</strong> при заказе от 5 000 ₽
+                                </div>
+                            </div>
+                            <div class="delivery-item">
+                                <i class="fas fa-undo delivery-icon"></i>
+                                <div class="delivery-text">
+                                    <strong>Возврат в течение 14 дней</strong> без объяснения причин
+                                </div>
+                            </div>
+                            <div class="delivery-item">
+                                <i class="fas fa-shield-alt delivery-icon"></i>
+                                <div class="delivery-text">
+                                    <strong>Гарантия качества</strong> от производителя
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <button class="wishlist-btn" style="position: static; margin-top: 10px;" onclick="toggleFavoriteFromProductPage(${product.id})">
+                            <i class="${isFavorite ? 'fas' : 'far'} fa-heart"></i>
+                            ${isFavorite ? 'В избранном' : 'Добавить в избранное'}
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="product-tabs">
+                    <div class="tabs">
+                        <button class="tab active" onclick="switchProductTab('description')">Описание</button>
+                        <button class="tab" onclick="switchProductTab('specs')">Характеристики</button>
+                        <button class="tab" onclick="switchProductTab('reviews')">Отзывы (${product.reviewsCount})</button>
+                    </div>
+                    
+                    <div id="descriptionTab" class="product-tab-content tab-content active">
+                        <div class="product-description">
+                            ${product.description.replace(/\n/g, '<br>')}
+                            ${product.details ? `<br><br><strong>Детали:</strong><br>${product.details.replace(/\n/g, '<br>')}` : ''}
+                        </div>
+                    </div>
+                    
+                    <div id="specsTab" class="product-tab-content tab-content">
+                        <div class="product-specs">
+                            ${product.brand ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Бренд:</span>
+                                    <span class="spec-value">${product.brand}</span>
+                                </div>
+                            ` : ''}
+                            ${product.materials ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Материал:</span>
+                                    <span class="spec-value">${product.materials}</span>
+                                </div>
+                            ` : ''}
+                            ${product.colors ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Цвета:</span>
+                                    <span class="spec-value">${Array.isArray(product.colors) ? product.colors.join(', ') : product.colors}</span>
+                                </div>
+                            ` : ''}
+                            ${product.sizes ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Размеры:</span>
+                                    <span class="spec-value">${Array.isArray(product.sizes) ? product.sizes.join(', ') : product.sizes}</span>
+                                </div>
+                            ` : ''}
+                            ${product.inStock !== undefined ? `
+                                <div class="spec-item">
+                                    <span class="spec-label">Наличие:</span>
+                                    <span class="spec-value">${product.inStock ? 'В наличии' : 'Нет в наличии'}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                    </div>
+                    
+                    <div id="reviewsTab" class="product-tab-content tab-content">
+                        <div class="reviews-header">
+                            <h3>Отзывы покупателей</h3>
+                            <button class="add-review-btn" onclick="addReview(${product.id})">
+                                <i class="fas fa-plus"></i> Добавить отзыв
+                            </button>
+                        </div>
+                        
+                        <div class="reviews-section">
+                            ${getProductReviews(product.id)}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="similar-products">
+                    <div class="section-header">
+                        <h2 class="section-title">Похожие товары</h2>
+                    </div>
+                    <div class="products-grid" id="similarProductsGrid"></div>
+                </div>
+            `;
+            
+            // Сбрасываем выбранный размер и количество
+            selectedSize = null;
+            selectedQuantity = 1;
+            
+            // Загружаем похожие товары
+            loadSimilarProducts(product);
+        }
+
+        function getRatingStars(rating) {
+            const fullStars = Math.floor(rating);
+            const halfStar = rating % 1 >= 0.5;
+            const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+            
+            let stars = '';
+            
+            for (let i = 0; i < fullStars; i++) {
+                stars += '<i class="fas fa-star"></i>';
+            }
+            
+            if (halfStar) {
+                stars += '<i class="fas fa-star-half-alt"></i>';
+            }
+            
+            for (let i = 0; i < emptyStars; i++) {
+                stars += '<i class="far fa-star"></i>';
+            }
+            
+            return stars;
+        }
+
+        function getProductReviews(productId) {
+            // Здесь можно загружать реальные отзывы из localStorage
+            const reviews = [
+                {
+                    id: 1,
+                    author: "Анна Смирнова",
+                    date: "2024-01-15",
+                    rating: 5,
+                    text: "Отличный товар! Качество на высоте, полностью соответствует описанию. Буду заказывать еще!"
+                },
+                {
+                    id: 2,
+                    author: "Иван Петров",
+                    date: "2024-01-10",
+                    rating: 4,
+                    text: "Хороший товар, но доставка немного задержалась. В целом доволен покупкой."
+                },
+                {
+                    id: 3,
+                    author: "Мария Иванова",
+                    date: "2024-01-05",
+                    rating: 5,
+                    text: "Супер! Все как на фото, очень довольна покупкой. Рекомендую!"
+                }
+            ];
+            
+            if (reviews.length === 0) {
+                return `
+                    <div class="empty-state" style="padding: 20px;">
+                        <div class="empty-icon">
+                            <i class="far fa-comment"></i>
+                        </div>
+                        <h3 class="empty-title">Отзывов пока нет</h3>
+                        <p class="empty-text">Будьте первым, кто оставит отзыв об этом товаре!</p>
+                    </div>
+                `;
+            }
+            
+            return reviews.map(review => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-author">${review.author}</div>
+                        <div class="review-date">${new Date(review.date).toLocaleDateString('ru-RU')}</div>
+                    </div>
+                    <div class="review-rating">
+                        ${getRatingStars(review.rating)}
+                    </div>
+                    <div class="review-text">${review.text}</div>
+                </div>
+            `).join('');
+        }
+
+        function loadSimilarProducts(product) {
+            const container = document.getElementById('similarProductsGrid');
+            if (!container) return;
+            
+            container.innerHTML = '';
+            
+            // Ищем товары из той же категории, исключая текущий
+            const similarProducts = products
+                .filter(p => p.category === product.category && p.id !== product.id)
+                .slice(0, 4);
+            
+            if (similarProducts.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 20px; color: var(--gray);">
+                        <p>Похожих товаров не найдено</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            similarProducts.forEach(product => {
+                const productElement = createProductElement(product);
+                container.appendChild(productElement);
+            });
+        }
+
+        function changeProductImage(imageUrl, element) {
+            const mainImage = document.getElementById('mainProductImage');
+            if (mainImage) {
+                mainImage.src = imageUrl;
+            }
+            
+            // Обновляем активную миниатюру
+            document.querySelectorAll('.product-thumbnail').forEach(thumb => {
+                thumb.classList.remove('active');
+            });
+            
+            if (element) {
+                element.classList.add('active');
+            }
+        }
+
+        function selectSize(size) {
+            selectedSize = size;
+            
+            // Обновляем активный размер
+            document.querySelectorAll('.size-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (btn.dataset.size === size) {
+                    btn.classList.add('active');
+                }
+            });
+        }
+
+        function changeQuantity(delta) {
+            selectedQuantity = Math.max(1, selectedQuantity + delta);
+            document.getElementById('quantityValue').textContent = selectedQuantity;
+        }
+
+        function showSizeChart() {
+            alert('Таблица размеров:\n\nXS - 42-44\nS - 44-46\nM - 46-48\nL - 48-50\nXL - 50-52\nXXL - 52-54\n\nВыберите размер, соответствующий вашим меркам.');
+        }
+
+        function toggleFavoriteFromProductPage(productId) {
+            toggleFavorite(productId);
+            
+            const product = products.find(p => p.id === productId);
+            const isNowFavorite = userData.favorites.includes(productId);
+            
+            // Обновляем кнопку на странице товара
+            const wishlistBtn = document.querySelector('.wishlist-btn');
+            if (wishlistBtn) {
+                wishlistBtn.innerHTML = `<i class="${isNowFavorite ? 'fas' : 'far'} fa-heart"></i> ${isNowFavorite ? 'В избранном' : 'Добавить в избранное'}`;
+            }
+            
+            updateFavoritesBadge();
+            showNotification(isNowFavorite ? 'Товар добавлен в избранное' : 'Товар удален из избранного');
+        }
+
+        function addToCartFromProductPage(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            // Проверяем размер для товаров, где он требуется
+            if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+                showNotification('Пожалуйста, выберите размер');
+                return;
+            }
+            
+            addToCart(product, selectedSize, selectedQuantity);
+            
+            // Обновляем кнопку на странице товара
+            const addToCartBtn = document.querySelector('.add-to-cart-large');
+            if (addToCartBtn) {
+                addToCartBtn.classList.add('added');
+                addToCartBtn.innerHTML = '<i class="fas fa-check"></i> В корзине';
+            }
+        }
+
+        function buyNow(productId) {
+            const product = products.find(p => p.id === productId);
+            if (!product) return;
+            
+            // Проверяем размер для товаров, где он требуется
+            if (product.sizes && product.sizes.length > 0 && !selectedSize) {
+                showNotification('Пожалуйста, выберите размер');
+                return;
+            }
+            
+            // Добавляем в корзину
+            addToCart(product, selectedSize, selectedQuantity);
+            
+            // Переходим к оформлению заказа
+            switchPage('checkout');
+            loadCheckoutPage();
+        }
+
+        function addToCart(product, size = null, quantity = 1) {
+            const existingItem = userData.cart.find(item => 
+                item.id === product.id && item.size === size
+            );
+            
             if (existingItem) {
-                existingItem.quantity += 1;
+                existingItem.quantity += quantity;
             } else {
                 userData.cart.push({
                     id: product.id,
@@ -2703,9 +3572,11 @@
                     brand: product.brand,
                     price: product.price,
                     image: product.image,
-                    quantity: 1
+                    size: size,
+                    quantity: quantity
                 });
             }
+            
             saveUserData();
             updateCartBadge();
             showNotification(`${product.name} добавлен в корзину`);
@@ -2714,6 +3585,55 @@
             if (activePage === 'cart') {
                 loadCartPage();
             }
+        }
+
+        function switchProductTab(tabId) {
+            // Обновляем табы
+            document.querySelectorAll('.product-tabs .tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            document.querySelectorAll('.product-tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Активируем выбранный таб
+            const activeTab = Array.from(document.querySelectorAll('.product-tabs .tab')).find(tab => 
+                tab.textContent.includes(tabId === 'description' ? 'Описание' : 
+                                        tabId === 'specs' ? 'Характеристики' : 'Отзывы')
+            );
+            
+            if (activeTab) {
+                activeTab.classList.add('active');
+            }
+            
+            const targetContent = document.getElementById(tabId + 'Tab');
+            if (targetContent) {
+                targetContent.classList.add('active');
+            }
+        }
+
+        function addReview(productId) {
+            const reviewText = prompt('Оставьте свой отзыв о товаре:');
+            if (reviewText && reviewText.trim()) {
+                // Здесь можно сохранить отзыв в localStorage
+                showNotification('Спасибо за ваш отзыв! Он будет опубликован после модерации.');
+            }
+        }
+
+        function goBackFromProduct() {
+            switchPage(lastPage);
+        }
+
+        function toggleFavorite(productId) {
+            const index = userData.favorites.indexOf(productId);
+            if (index > -1) {
+                userData.favorites.splice(index, 1);
+            } else {
+                userData.favorites.push(productId);
+            }
+            saveUserData();
+            updateProfileUI();
         }
 
         function removeFromCart(productId) {
@@ -2790,6 +3710,7 @@
                         <div class="cart-item-info">
                             <h4 class="cart-item-title">${item.name}</h4>
                             <div class="product-brand">${item.brand}</div>
+                            ${item.size ? `<div style="font-size: 12px; color: var(--gray);">Размер: ${item.size}</div>` : ''}
                             <div class="cart-item-price">${item.price.toLocaleString()} ₽</div>
                         </div>
                         <div class="cart-item-actions">
@@ -3241,6 +4162,7 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
                                             <div class="order-item-name">${item.name}</div>
                                             <div class="order-item-meta">
                                                 ${item.brand} • ${item.quantity} × ${item.price.toLocaleString()} ₽
+                                                ${item.size ? ` • Размер: ${item.size}` : ''}
                                             </div>
                                         </div>
                                         <div class="order-item-total">${(item.price * item.quantity).toLocaleString()} ₽</div>
@@ -3384,6 +4306,7 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
                                                 <div class="order-item-name">${item.name}</div>
                                                 <div class="order-item-meta">
                                                     ${item.brand} • ${item.quantity} × ${item.price.toLocaleString()} ₽
+                                                    ${item.size ? ` • Размер: ${item.size}` : ''}
                                                 </div>
                                             </div>
                                             <div class="order-item-total">${(item.price * item.quantity).toLocaleString()} ₽</div>
@@ -3605,6 +4528,7 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 'home': 'Главная',
                 'categories': 'Категории',
                 'category-page': 'Категории',
+                'product-page': 'Главная',
                 'favorites': 'Избранное',
                 'cart': 'Корзина',
                 'profile': 'Профиль',
@@ -3854,9 +4778,10 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             const price = parseInt(document.getElementById('adminProductPrice').value);
             const categoryId = document.getElementById('adminProductCategory').value;
             const imageUrl = document.getElementById('adminProductImage').value.trim();
+            const description = document.getElementById('adminProductDescription').value.trim();
             
             if (!name || !price || !categoryId || !imageUrl) {
-                showNotification('Заполните все поля');
+                showNotification('Заполните все обязательные поля');
                 return;
             }
             
@@ -3876,7 +4801,16 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 discount: Math.floor(Math.random() * 30) + 10,
                 category: categoryId,
                 image: imageUrl,
-                description: name
+                images: [imageUrl],
+                description: description || name,
+                details: description || name,
+                sizes: ["S", "M", "L", "XL"],
+                availableSizes: ["S", "M", "L"],
+                materials: "Хлопок 100%",
+                colors: ["Черный", "Белый", "Серый"],
+                rating: 4.5,
+                reviewsCount: 0,
+                inStock: true
             };
             
             products.push(newProduct);
@@ -3888,6 +4822,7 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             document.getElementById('adminProductPrice').value = '';
             document.getElementById('adminProductCategory').value = '';
             document.getElementById('adminProductImage').value = '';
+            document.getElementById('adminProductDescription').value = '';
             
             loadAdminData();
         }
@@ -3935,6 +4870,11 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             if (activePage === 'home') loadPopularProducts();
             if (activePage === 'favorites') loadFavoritesPage();
             if (activePage === 'cart') loadCartPage();
+            if (activePage === 'product-page') {
+                if (currentProductId === productId) {
+                    goBackFromProduct();
+                }
+            }
         }
 
         function createPromoCode() {
@@ -4420,12 +5360,6 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                         // Сохраняем сессию
                         saveUserSession();
                     }
-                }
-                
-                // Устанавливаем тему
-                if (tg.colorScheme === 'dark') {
-                    document.body.style.background = '#F8F9FA';
-                    document.body.style.color = '#FFFFFF';
                 }
                 
                 // Показываем кнопку админ-панели если пользователь админ
