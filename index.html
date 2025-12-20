@@ -3360,7 +3360,7 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
             try {
                 const message = `🔄 *ОБНОВЛЕНИЕ СТАТУСА ЗАКАЗА #${order.id}*
                 
-👤 *Клиент:* ${order.customer.name}
+👤 *Клиент:* ${order.customer.name} @${order.customer.telegramUsername}
 📱 *Телефон:* ${order.customer.phone}
 ${order.customer.telegramUsername ? `👤 *Telegram:* @${order.customer.telegramUsername}\n` : ''}
 📦 *Старый статус:* ${getStatusText(oldStatus)}
