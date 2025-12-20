@@ -2049,7 +2049,7 @@
                 // Загружаем данные
                 await loadAllData();
                 
-                // Получаем user ID из URL hash или localStorage
+                // Проверяем есть ли ID в URL
                 const hash = window.location.hash;
                 let userIdFromHash = null;
                 
@@ -2059,6 +2059,23 @@
                 
                 // Проверяем сохраненный userId в localStorage
                 const savedUserId = localStorage.getItem('unicorn_userId');
+                
+                // Приоритет: hash > сохраненный userId
+                if (userIdFromHash) {
+                    currentUserId = decodeURIComponent(userIdFromHash);
+                    localStorage.setItem('unicorn_userId', currentUserId);
+                } else if (savedUserId) {
+                    currentUserId = savedUserId;
+                    window.location.hash = `profile-${encodeURIComponent(currentUserId)}`;
+                } else {
+                    // Создаем новый ID с красивым номером
+                    const randomNum = Math.floor(1000 + Math.random() * 9000);
+                    currentUserId = `user_${randomNum}`;
+                    window.location.hash = `profile-${encodeURIComponent(currentUserId)}`;
+                    localStorage.setItem('unicorn_userId', currentUserId);
+                }
+                
+                // Проверяем Telegram данные
                 const savedTelegramUsername = localStorage.getItem('unicorn_telegramUsername');
                 const savedTelegramFirstName = localStorage.getItem('unicorn_telegramFirstName');
                 const savedTelegramLastName = localStorage.getItem('unicorn_telegramLastName');
@@ -2073,34 +2090,11 @@
                     telegramLastName = savedTelegramLastName;
                 }
                 
-                // Приоритет: hash > сохраненный userId
-                if (userIdFromHash) {
-                    currentUserId = userIdFromHash;
-                    localStorage.setItem('unicorn_userId', currentUserId);
-                } else if (savedUserId) {
-                    currentUserId = savedUserId;
-                    window.location.hash = `profile-${currentUserId}`;
-                } else {
-                    // Создаем новый ID
-                    currentUserId = 'user_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                    window.location.hash = `profile-${currentUserId}`;
-                    localStorage.setItem('unicorn_userId', currentUserId);
-                }
-                
                 // Проверяем админские права
-                isAdmin = (currentUserId === ADMIN_USER_ID || telegramUsername === 'admin');
+                isAdmin = checkAdminRights();
                 
                 // Загружаем данные пользователя
                 userData = getUserData(currentUserId);
-                
-                // Обновляем имя пользователя из Telegram, если есть
-                updateUserFromTelegram();
-                
-                // Проверяем и исправляем данные пользователя
-                if (userData.reviews && userData.reviews > 0 && userData.orders.length === 0) {
-                    userData.reviews = 0;
-                    saveUserData();
-                }
                 
                 // Инициализируем UI
                 await initializeUI();
@@ -2128,6 +2122,24 @@
             }
         }
 
+        function checkAdminRights() {
+            // Проверяем ID пользователя
+            if (currentUserId === ADMIN_USER_ID.toString()) {
+                return true;
+            }
+            
+            // Проверяем Telegram ID если есть
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                const user = tg.initDataUnsafe.user;
+                if (user && user.id === parseInt(ADMIN_USER_ID)) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
         function updateUserFromTelegram() {
             if (!userData) return;
             
@@ -2140,7 +2152,7 @@
                     displayName += ' ' + telegramLastName;
                 }
             } else if (telegramUsername) {
-                displayName = telegramUsername;
+                displayName = '@' + telegramUsername;
             }
             
             // Обновляем данные пользователя если есть Telegram информация
@@ -2192,9 +2204,15 @@
                             displayName += ' ' + telegramLastName;
                         }
                     } else if (telegramUsername) {
-                        displayName = telegramUsername;
+                        displayName = '@' + telegramUsername;
                     } else {
-                        displayName = `Пользователь ${userId.substring(userId.length - 4)}`;
+                        // Извлекаем красивый номер из ID
+                        const match = userId.match(/\d+/);
+                        if (match) {
+                            displayName = `Пользователь ${match[0]}`;
+                        } else {
+                            displayName = `Пользователь`;
+                        }
                     }
                     
                     // Создаем нового пользователя
@@ -2217,7 +2235,7 @@
                     
                     localStorage.setItem('unicorn_users', JSON.stringify(users));
                 } else {
-                    // Обновляем время последней активности и Telegram username
+                    // Обновляем время последней активности
                     users[userId].lastActive = new Date().toISOString();
                     
                     // Обновляем Telegram данные если они есть
@@ -2238,7 +2256,7 @@
                             users[userId].name += ' ' + telegramLastName;
                         }
                     } else if (telegramUsername) {
-                        users[userId].name = telegramUsername;
+                        users[userId].name = '@' + telegramUsername;
                     }
                     
                     localStorage.setItem('unicorn_users', JSON.stringify(users));
@@ -2259,9 +2277,15 @@
                     displayName += ' ' + telegramLastName;
                 }
             } else if (telegramUsername) {
-                displayName = telegramUsername;
+                displayName = '@' + telegramUsername;
             } else {
-                displayName = `Пользователь ${userId.substring(userId.length - 4)}`;
+                // Извлекаем красивый номер из ID
+                const match = userId.match(/\d+/);
+                if (match) {
+                    displayName = `Пользователь ${match[0]}`;
+                } else {
+                    displayName = `Пользователь`;
+                }
             }
             
             return {
@@ -2327,10 +2351,10 @@
             if (hash.includes('profile-')) {
                 const userId = hash.split('profile-')[1];
                 if (userId && userId !== currentUserId) {
-                    currentUserId = userId;
+                    currentUserId = decodeURIComponent(userId);
                     localStorage.setItem('unicorn_userId', currentUserId);
                     userData = getUserData(currentUserId);
-                    isAdmin = (userId === ADMIN_USER_ID || telegramUsername === 'admin');
+                    isAdmin = checkAdminRights();
                     updateProfileUI();
                     updateCartBadge();
                     updateFavoritesBadge();
@@ -3142,9 +3166,9 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
                     // Формируем информацию о Telegram пользователе
                     let telegramInfo = '';
                     if (order.customer.telegramUsername) {
-                        telegramInfo = `👤 *Telegram:* @${order.customer.telegramUsername}`;
+                        telegramInfo = `👤 Telegram: @${order.customer.telegramUsername}`;
                     } else if (order.customer.telegramFirstName) {
-                        telegramInfo = `👤 *Имя из Telegram:* ${order.customer.telegramFirstName}`;
+                        telegramInfo = `👤 Имя из Telegram: ${order.customer.telegramFirstName}`;
                         if (order.customer.telegramLastName) {
                             telegramInfo += ` ${order.customer.telegramLastName}`;
                         }
@@ -3411,11 +3435,13 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
         }
 
         function updateProfileUI() {
+            if (!userData) return;
+            
             // Обновляем аватар и имя
             const avatarText = userData.name ? userData.name.charAt(0).toUpperCase() : '?';
             document.getElementById('profileAvatar').textContent = avatarText;
             document.getElementById('userAvatar').textContent = avatarText;
-            document.getElementById('profileName').textContent = userData.name;
+            document.getElementById('profileName').textContent = userData.name || 'Гость';
             document.getElementById('profilePhone').textContent = userData.phone || 'Не указан';
             
             // Обновляем статистику
@@ -4143,7 +4169,7 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
         }
 
         function openInviteModal() {
-            const inviteLink = `${window.location.origin}${window.location.pathname}#profile-${currentUserId}`;
+            const inviteLink = `${window.location.origin}${window.location.pathname}#profile-${encodeURIComponent(currentUserId)}`;
             if (navigator.share) {
                 navigator.share({
                     title: 'UNICORN Shop',
@@ -4229,7 +4255,9 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 // Устанавливаем кнопку админ-панели для администратора
                 if (user && user.id === parseInt(ADMIN_USER_ID)) {
                     isAdmin = true;
-                    createAdminToggle();
+                    if (!document.querySelector('.admin-toggle')) {
+                        createAdminToggle();
+                    }
                 }
             }
         }
@@ -4241,8 +4269,8 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
             // Для отладки вне Telegram
             console.log('Telegram Web App не обнаружен, работаем в обычном режиме');
             
-            // Для тестирования админки можно использовать этот код
-            if (currentUserId === ADMIN_USER_ID) {
+            // Для тестирования админки
+            if (currentUserId === ADMIN_USER_ID.toString()) {
                 isAdmin = true;
                 createAdminToggle();
             }
