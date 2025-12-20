@@ -1945,8 +1945,8 @@
     <script>
         // Telegram Bot Configuration
         const TELEGRAM_BOT_TOKEN = '8297619186:AAFALMlS8mt2FpUwNzorLQalkOshPpULb2Y';
-        const TELEGRAM_CHAT_ID = '6644058285'; // Ваш ID администратора
-        const ADMIN_USER_ID = '6644058285'; // Ваш администраторский ID
+        const TELEGRAM_CHAT_ID = '6644058285';
+        const ADMIN_USER_ID = '6644058285';
 
         // Улучшенные данные
         const defaultCategories = {
@@ -2034,6 +2034,7 @@
         let telegramUsername = '';
         let telegramFirstName = '';
         let telegramLastName = '';
+        let telegramUserId = '';
         let activePromoCode = null;
         let promoDiscount = 0;
 
@@ -2042,64 +2043,130 @@
             await initApp();
         });
 
+        // ВАЖНОЕ ИСПРАВЛЕНИЕ: Новая функция для сохранения сессии
+        function saveUserSession() {
+            if (!userData) return;
+            
+            try {
+                // Сохраняем сессию пользователя
+                const sessionData = {
+                    userId: currentUserId,
+                    telegramUsername: telegramUsername,
+                    telegramFirstName: telegramFirstName,
+                    telegramLastName: telegramLastName,
+                    telegramUserId: telegramUserId,
+                    lastActive: new Date().toISOString(),
+                    cart: userData.cart,
+                    favorites: userData.favorites,
+                    viewed: userData.viewed
+                };
+                
+                localStorage.setItem('unicorn_session', JSON.stringify(sessionData));
+                console.log('Сессия сохранена:', currentUserId);
+            } catch (error) {
+                console.error('Ошибка сохранения сессии:', error);
+            }
+        }
+
+        // ВАЖНОЕ ИСПРАВЛЕНИЕ: Новая функция для восстановления сессии
+        function restoreUserSession() {
+            try {
+                const sessionData = JSON.parse(localStorage.getItem('unicorn_session'));
+                if (!sessionData) return null;
+                
+                console.log('Восстановление сессии:', sessionData.userId);
+                
+                // Восстанавливаем данные из сессии
+                telegramUsername = sessionData.telegramUsername || '';
+                telegramFirstName = sessionData.telegramFirstName || '';
+                telegramLastName = sessionData.telegramLastName || '';
+                telegramUserId = sessionData.telegramUserId || '';
+                
+                // Возвращаем данные для использования
+                return sessionData;
+            } catch (error) {
+                console.error('Ошибка восстановления сессии:', error);
+                return null;
+            }
+        }
+
         async function initApp() {
             try {
                 showLoading(true);
                 
+                // Восстанавливаем сессию ДО загрузки данных
+                const sessionData = restoreUserSession();
+                
                 // Загружаем данные
                 await loadAllData();
                 
-                // Проверяем есть ли ID в URL
-                const hash = window.location.hash;
+                // Определяем ID пользователя (приоритеты):
+                // 1. Telegram ID (если есть в сессии)
+                // 2. ID из хэша URL
+                // 3. Сохраненный ID
+                // 4. Новый ID
+                
                 let userIdFromHash = null;
+                const hash = window.location.hash;
                 
                 if (hash.includes('profile-')) {
                     userIdFromHash = hash.split('profile-')[1];
-                    // ОЧИЩАЕМ старый ID если есть новый из URL
-                    if (localStorage.getItem('unicorn_userId') && localStorage.getItem('unicorn_userId') !== userIdFromHash) {
-                        console.log('Обнаружен новый ID из URL, очищаем данные сессии');
-                        localStorage.removeItem('telegram_init_data');
-                    }
                 }
                 
-                // Проверяем сохраненный userId в localStorage
-                const savedUserId = localStorage.getItem('unicorn_userId');
-                
-                // Приоритет: hash > сохраненный userId
-                if (userIdFromHash) {
+                // Приоритет: Telegram ID > ID из хэша > сохраненный ID
+                if (telegramUserId) {
+                    currentUserId = telegramUserId;
+                    console.log('Используем Telegram ID:', currentUserId);
+                } else if (userIdFromHash) {
                     currentUserId = decodeURIComponent(userIdFromHash);
-                    localStorage.setItem('unicorn_userId', currentUserId);
-                } else if (savedUserId) {
-                    currentUserId = savedUserId;
-                    window.location.hash = `profile-${encodeURIComponent(currentUserId)}`;
+                    console.log('Используем ID из хэша:', currentUserId);
+                } else if (sessionData && sessionData.userId) {
+                    currentUserId = sessionData.userId;
+                    console.log('Используем ID из сессии:', currentUserId);
                 } else {
-                    // Создаем новый ID с красивым номером
+                    // Создаем новый ID
                     const randomNum = Math.floor(1000 + Math.random() * 9000);
-                    currentUserId = `user_${randomNum}`;
-                    window.location.hash = `profile-${encodeURIComponent(currentUserId)}`;
-                    localStorage.setItem('unicorn_userId', currentUserId);
+                    currentUserId = `user_${Date.now()}_${randomNum}`;
+                    console.log('Создан новый ID:', currentUserId);
                 }
                 
-                // Проверяем Telegram данные
-                const savedTelegramUsername = localStorage.getItem('unicorn_telegramUsername');
-                const savedTelegramFirstName = localStorage.getItem('unicorn_telegramFirstName');
-                const savedTelegramLastName = localStorage.getItem('unicorn_telegramLastName');
-                
-                if (savedTelegramUsername) {
-                    telegramUsername = savedTelegramUsername;
-                }
-                if (savedTelegramFirstName) {
-                    telegramFirstName = savedTelegramFirstName;
-                }
-                if (savedTelegramLastName) {
-                    telegramLastName = savedTelegramLastName;
-                }
-                
-                // Проверяем админские права - ФИКС: проверяем после установки currentUserId
-                isAdmin = checkAdminRights();
+                // Обновляем хэш в URL
+                window.location.hash = `profile-${encodeURIComponent(currentUserId)}`;
+                localStorage.setItem('unicorn_userId', currentUserId);
                 
                 // Загружаем данные пользователя
                 userData = getUserData(currentUserId);
+                
+                // ВОССТАНАВЛИВАЕМ данные из сессии если они есть
+                if (sessionData) {
+                    // Объединяем корзину
+                    if (sessionData.cart && sessionData.cart.length > 0) {
+                        // Объединяем товары, избегая дубликатов
+                        sessionData.cart.forEach(sessionItem => {
+                            const existingItem = userData.cart.find(item => item.id === sessionItem.id);
+                            if (!existingItem) {
+                                userData.cart.push(sessionItem);
+                            }
+                        });
+                        console.log('Восстановлена корзина из сессии:', sessionData.cart.length, 'товаров');
+                    }
+                    
+                    // Объединяем избранное
+                    if (sessionData.favorites && sessionData.favorites.length > 0) {
+                        sessionData.favorites.forEach(favId => {
+                            if (!userData.favorites.includes(favId)) {
+                                userData.favorites.push(favId);
+                            }
+                        });
+                        console.log('Восстановлено избранное из сессии:', sessionData.favorites.length, 'товаров');
+                    }
+                    
+                    // Сохраняем обновленные данные
+                    saveUserData();
+                }
+                
+                // Проверяем админские права
+                isAdmin = checkAdminRights();
                 
                 // Инициализируем UI
                 await initializeUI();
@@ -2112,12 +2179,20 @@
                 
                 isInitialized = true;
                 
+                // Сохраняем сессию
+                saveUserSession();
+                
                 // Загружаем активную страницу
                 const activePage = document.querySelector('.page.active').id;
                 if (activePage === 'cart') await loadCartPage();
                 if (activePage === 'favorites') await loadFavoritesPage();
                 if (activePage === 'profile') loadUserOrders();
                 if (activePage === 'admin-orders') loadAdminOrders();
+                
+                // Показываем приветствие
+                if (userData.name && userData.name !== 'Гость') {
+                    showNotification(`Добро пожаловать, ${userData.name}!`);
+                }
                 
             } catch (error) {
                 console.error('Ошибка инициализации:', error);
@@ -2128,59 +2203,37 @@
         }
 
         function checkAdminRights() {
-            // Проверяем ID пользователя - ФИКС: правильное сравнение
-            if (currentUserId === ADMIN_USER_ID || currentUserId === ADMIN_USER_ID.toString()) {
-                console.log('Пользователь является администратором по ID');
+            console.log('Проверка прав администратора:');
+            console.log('- Текущий ID:', currentUserId);
+            console.log('- Telegram ID:', telegramUserId);
+            console.log('- Telegram username:', telegramUsername);
+            
+            // 1. Проверяем по Telegram ID
+            if (telegramUserId && telegramUserId === ADMIN_USER_ID) {
+                console.log('✅ Администратор по Telegram ID');
                 return true;
             }
             
-            // Проверяем Telegram ID если есть
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
-                const user = tg.initDataUnsafe.user;
-                if (user && (user.id.toString() === ADMIN_USER_ID || user.id === parseInt(ADMIN_USER_ID))) {
-                    console.log('Пользователь является администратором по Telegram ID');
-                    return true;
-                }
-            }
-            
-            // Дополнительная проверка по username
-            if (telegramUsername === 'barizhka' || telegramUsername === 'admin') {
-                console.log('Пользователь является администратором по username');
+            // 2. Проверяем по текущему ID
+            if (currentUserId && currentUserId === ADMIN_USER_ID) {
+                console.log('✅ Администратор по текущему ID');
                 return true;
             }
             
-            console.log('Пользователь НЕ является администратором', {
-                currentUserId,
-                ADMIN_USER_ID,
-                telegramUsername
-            });
+            // 3. Проверяем по Telegram username
+            if (telegramUsername && (telegramUsername === 'barizhka' || telegramUsername === 'admin')) {
+                console.log('✅ Администратор по Telegram username');
+                return true;
+            }
+            
+            // 4. Проверяем по имени пользователя
+            if (userData && userData.name && userData.name.toLowerCase().includes('админ')) {
+                console.log('✅ Администратор по имени');
+                return true;
+            }
+            
+            console.log('❌ Не администратор');
             return false;
-        }
-
-        function updateUserFromTelegram() {
-            if (!userData) return;
-            
-            // Формируем красивое имя из Telegram данных
-            let displayName = '';
-            
-            if (telegramFirstName) {
-                displayName = telegramFirstName;
-                if (telegramLastName) {
-                    displayName += ' ' + telegramLastName;
-                }
-            } else if (telegramUsername) {
-                displayName = '@' + telegramUsername;
-            }
-            
-            // Обновляем данные пользователя если есть Telegram информация
-            if (displayName) {
-                userData.name = displayName;
-                userData.telegramUsername = telegramUsername;
-                userData.telegramFirstName = telegramFirstName;
-                userData.telegramLastName = telegramLastName;
-                saveUserData();
-            }
         }
 
         async function loadAllData() {
@@ -2192,6 +2245,7 @@
                 if (savedCategories && savedProducts) {
                     categories = JSON.parse(savedCategories);
                     products = JSON.parse(savedProducts);
+                    console.log('Данные загружены из localStorage');
                 } else {
                     // Используем дефолтные данные
                     categories = JSON.parse(JSON.stringify(defaultCategories));
@@ -2200,6 +2254,7 @@
                     // Сохраняем
                     localStorage.setItem('unicorn_categories', JSON.stringify(categories));
                     localStorage.setItem('unicorn_products', JSON.stringify(products));
+                    console.log('Созданы дефолтные данные');
                 }
                 
             } catch (error) {
@@ -2213,8 +2268,59 @@
             try {
                 const users = JSON.parse(localStorage.getItem('unicorn_users')) || {};
                 
+                // ВАЖНОЕ ИСПРАВЛЕНИЕ: Ищем пользователя по Telegram данным
+                let foundUser = null;
+                let foundUserId = null;
+                
+                // Ищем по Telegram ID
+                if (telegramUserId) {
+                    for (const uid in users) {
+                        if (users[uid].telegramId === telegramUserId) {
+                            foundUser = users[uid];
+                            foundUserId = uid;
+                            break;
+                        }
+                    }
+                }
+                
+                // Ищем по Telegram username
+                if (!foundUser && telegramUsername) {
+                    for (const uid in users) {
+                        if (users[uid].telegramUsername === telegramUsername) {
+                            foundUser = users[uid];
+                            foundUserId = uid;
+                            break;
+                        }
+                    }
+                }
+                
+                // Если нашли существующего пользователя - используем его
+                if (foundUser) {
+                    console.log('Найден существующий пользователь:', foundUserId, foundUser.name);
+                    
+                    // Обновляем время активности
+                    foundUser.lastActive = new Date().toISOString();
+                    
+                    // Обновляем Telegram данные
+                    if (telegramUsername) foundUser.telegramUsername = telegramUsername;
+                    if (telegramFirstName) foundUser.telegramFirstName = telegramFirstName;
+                    if (telegramLastName) foundUser.telegramLastName = telegramLastName;
+                    if (telegramUserId) foundUser.telegramId = telegramUserId;
+                    
+                    // Обновляем текущий ID
+                    currentUserId = foundUserId;
+                    localStorage.setItem('unicorn_userId', currentUserId);
+                    
+                    // Сохраняем обновленные данные
+                    users[foundUserId] = foundUser;
+                    localStorage.setItem('unicorn_users', JSON.stringify(users));
+                    
+                    return foundUser;
+                }
+                
+                // Если пользователь не найден - создаем/загружаем по userId
                 if (!users[userId]) {
-                    // Формируем красивое имя для нового пользователя
+                    // Формируем красивое имя
                     let displayName = '';
                     if (telegramFirstName) {
                         displayName = telegramFirstName;
@@ -2224,13 +2330,7 @@
                     } else if (telegramUsername) {
                         displayName = '@' + telegramUsername;
                     } else {
-                        // Извлекаем красивый номер из ID
-                        const match = userId.match(/\d+/);
-                        if (match) {
-                            displayName = `Пользователь ${match[0]}`;
-                        } else {
-                            displayName = `Пользователь`;
-                        }
+                        displayName = `Пользователь ${userId.slice(-4)}`;
                     }
                     
                     // Создаем нового пользователя
@@ -2248,38 +2348,23 @@
                         lastActive: new Date().toISOString(),
                         telegramUsername: telegramUsername || null,
                         telegramFirstName: telegramFirstName || null,
-                        telegramLastName: telegramLastName || null
+                        telegramLastName: telegramLastName || null,
+                        telegramId: telegramUserId || null
                     };
                     
                     localStorage.setItem('unicorn_users', JSON.stringify(users));
                     console.log('Создан новый пользователь:', userId, displayName);
                 } else {
-                    // Обновляем время последней активности
+                    // Обновляем существующего пользователя
                     users[userId].lastActive = new Date().toISOString();
                     
-                    // Обновляем Telegram данные если они есть
-                    if (telegramUsername && !users[userId].telegramUsername) {
-                        users[userId].telegramUsername = telegramUsername;
-                    }
-                    if (telegramFirstName && !users[userId].telegramFirstName) {
-                        users[userId].telegramFirstName = telegramFirstName;
-                    }
-                    if (telegramLastName && !users[userId].telegramLastName) {
-                        users[userId].telegramLastName = telegramLastName;
-                    }
-                    
-                    // Обновляем имя если есть Telegram данные
-                    if (telegramFirstName) {
-                        users[userId].name = telegramFirstName;
-                        if (telegramLastName) {
-                            users[userId].name += ' ' + telegramLastName;
-                        }
-                    } else if (telegramUsername) {
-                        users[userId].name = '@' + telegramUsername;
-                    }
+                    // Обновляем Telegram данные
+                    if (telegramUsername) users[userId].telegramUsername = telegramUsername;
+                    if (telegramFirstName) users[userId].telegramFirstName = telegramFirstName;
+                    if (telegramLastName) users[userId].telegramLastName = telegramLastName;
+                    if (telegramUserId) users[userId].telegramId = telegramUserId;
                     
                     localStorage.setItem('unicorn_users', JSON.stringify(users));
-                    console.log('Загружен существующий пользователь:', userId, users[userId].name);
                 }
                 
                 return users[userId];
@@ -2299,13 +2384,7 @@
             } else if (telegramUsername) {
                 displayName = '@' + telegramUsername;
             } else {
-                // Извлекаем красивый номер из ID
-                const match = userId.match(/\d+/);
-                if (match) {
-                    displayName = `Пользователь ${match[0]}`;
-                } else {
-                    displayName = `Пользователь`;
-                }
+                displayName = `Пользователь ${userId.slice(-4)}`;
             }
             
             return {
@@ -2322,7 +2401,8 @@
                 lastActive: new Date().toISOString(),
                 telegramUsername: telegramUsername || null,
                 telegramFirstName: telegramFirstName || null,
-                telegramLastName: telegramLastName || null
+                telegramLastName: telegramLastName || null,
+                telegramId: telegramUserId || null
             };
         }
 
@@ -2332,6 +2412,10 @@
                 users[currentUserId] = userData;
                 localStorage.setItem('unicorn_users', JSON.stringify(users));
                 console.log('Данные пользователя сохранены:', currentUserId);
+                
+                // Сохраняем сессию
+                saveUserSession();
+                
             } catch (error) {
                 console.error('Ошибка сохранения пользователя:', error);
             }
@@ -2340,6 +2424,7 @@
         function saveCategories() {
             try {
                 localStorage.setItem('unicorn_categories', JSON.stringify(categories));
+                console.log('Категории сохранены');
             } catch (error) {
                 console.error('Ошибка сохранения категорий:', error);
             }
@@ -2348,6 +2433,7 @@
         function saveProducts() {
             try {
                 localStorage.setItem('unicorn_products', JSON.stringify(products));
+                console.log('Товары сохранены');
             } catch (error) {
                 console.error('Ошибка сохранения товаров:', error);
             }
@@ -2361,11 +2447,11 @@
             updateFavoritesBadge();
             setupAdminPanel();
             
-            // Добавляем обработчик изменений hash
-            window.addEventListener('hashchange', handleHashChange);
-            
             // Проверяем и показываем админ-кнопку
             checkAndShowAdminButton();
+            
+            // Добавляем обработчик изменений hash
+            window.addEventListener('hashchange', handleHashChange);
         }
 
         function checkAndShowAdminButton() {
@@ -2379,7 +2465,6 @@
                 console.log('Админ-кнопка показана');
             } else if (adminToggle) {
                 adminToggle.style.display = 'none';
-                console.log('Админ-кнопка скрыта');
             }
         }
 
@@ -2391,14 +2476,22 @@
                 const userId = hash.split('profile-')[1];
                 if (userId && userId !== currentUserId) {
                     console.log('Смена пользователя по хэшу:', userId);
+                    
+                    // Сохраняем текущую сессию перед сменой
+                    saveUserSession();
+                    
+                    // Обновляем ID
                     currentUserId = decodeURIComponent(userId);
                     localStorage.setItem('unicorn_userId', currentUserId);
+                    
+                    // Загружаем нового пользователя
                     userData = getUserData(currentUserId);
                     
                     // Перепроверяем админские права
                     const wasAdmin = isAdmin;
                     isAdmin = checkAdminRights();
                     
+                    // Обновляем UI
                     updateProfileUI();
                     updateCartBadge();
                     updateFavoritesBadge();
@@ -2557,6 +2650,7 @@
                 this.classList.toggle('active', isNowFavorite);
                 this.innerHTML = `<i class="${isNowFavorite ? 'fas' : 'far'} fa-heart"></i>`;
                 updateFavoritesBadge();
+                saveUserSession(); // Сохраняем сессию после изменения
             });
             
             const addToCartBtn = div.querySelector('.add-to-cart');
@@ -2565,6 +2659,7 @@
                 addToCart(product);
                 this.classList.add('added');
                 this.innerHTML = '<i class="fas fa-check"></i> В корзине';
+                saveUserSession(); // Сохраняем сессию после изменения
                 
                 setTimeout(() => {
                     const inCartNow = userData.cart.find(item => item.id === product.id);
@@ -3360,7 +3455,7 @@ ${order.discountAmount > 0 ? `🎫 *Скидка:* -${order.discountAmount.toLoc
             try {
                 const message = `🔄 *ОБНОВЛЕНИЕ СТАТУСА ЗАКАЗА #${order.id}*
                 
-👤 *Клиент:* ${order.customer.name} @${order.customer.telegramUsername}
+👤 *Клиент:* ${order.customer.name}
 📱 *Телефон:* ${order.customer.phone}
 ${order.customer.telegramUsername ? `👤 *Telegram:* @${order.customer.telegramUsername}\n` : ''}
 📦 *Старый статус:* ${getStatusText(oldStatus)}
@@ -4103,43 +4198,40 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
 
         function resetData() {
             if (confirm('ВНИМАНИЕ! Это удалит ВСЕ данные (категории, товары, пользователей, заказы). Продолжить?')) {
-                // Не удаляем userId пользователя
-                const savedUserId = localStorage.getItem('unicorn_userId');
-                const savedTelegramUsername = localStorage.getItem('unicorn_telegramUsername');
-                const savedTelegramFirstName = localStorage.getItem('unicorn_telegramFirstName');
-                const savedTelegramLastName = localStorage.getItem('unicorn_telegramLastName');
+                // Сохраняем сессию текущего пользователя
+                const currentSession = {
+                    userId: currentUserId,
+                    telegramUsername: telegramUsername,
+                    telegramFirstName: telegramFirstName,
+                    telegramLastName: telegramLastName,
+                    telegramUserId: telegramUserId,
+                    cart: userData.cart,
+                    favorites: userData.favorites
+                };
                 
+                // Очищаем localStorage
                 localStorage.clear();
                 
-                // Восстанавливаем userId и Telegram данные
-                if (savedUserId) {
-                    localStorage.setItem('unicorn_userId', savedUserId);
-                }
-                if (savedTelegramUsername) {
-                    localStorage.setItem('unicorn_telegramUsername', savedTelegramUsername);
-                    telegramUsername = savedTelegramUsername;
-                }
-                if (savedTelegramFirstName) {
-                    localStorage.setItem('unicorn_telegramFirstName', savedTelegramFirstName);
-                    telegramFirstName = savedTelegramFirstName;
-                }
-                if (savedTelegramLastName) {
-                    localStorage.setItem('unicorn_telegramLastName', savedTelegramLastName);
-                    telegramLastName = savedTelegramLastName;
-                }
+                // Восстанавливаем сессию
+                localStorage.setItem('unicorn_session', JSON.stringify(currentSession));
                 
+                // Восстанавливаем базовые данные
                 categories = JSON.parse(JSON.stringify(defaultCategories));
                 products = JSON.parse(JSON.stringify(defaultProducts));
                 
                 localStorage.setItem('unicorn_categories', JSON.stringify(categories));
                 localStorage.setItem('unicorn_products', JSON.stringify(products));
                 
+                // Восстанавливаем пользователя
                 if (currentUserId) {
                     userData = createNewUserData(currentUserId);
+                    // Восстанавливаем корзину и избранное из сессии
+                    userData.cart = currentSession.cart || [];
+                    userData.favorites = currentSession.favorites || [];
                     saveUserData();
                 }
                 
-                showNotification('Все данные сброшены');
+                showNotification('Все данные сброшены, ваша корзина сохранена');
                 
                 loadMainCategories();
                 loadPopularProducts();
@@ -4279,6 +4371,8 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 // Получаем данные пользователя
                 const user = tg.initDataUnsafe.user;
                 if (user) {
+                    console.log('Telegram данные получены:', user);
+                    
                     // Устанавливаем данные из Telegram
                     if (user.username) {
                         telegramUsername = user.username;
@@ -4292,17 +4386,25 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                         telegramLastName = user.last_name;
                         localStorage.setItem('unicorn_telegramLastName', user.last_name);
                     }
+                    if (user.id) {
+                        telegramUserId = user.id.toString();
+                        localStorage.setItem('unicorn_telegramId', telegramUserId);
+                    }
                     
-                    console.log('Telegram данные получены:', {
-                        username: telegramUsername,
-                        firstName: telegramFirstName,
-                        lastName: telegramLastName
-                    });
+                    // Обновляем хэш в URL
+                    if (telegramUserId) {
+                        window.location.hash = `profile-${telegramUserId}`;
+                    }
                     
                     // Обновляем данные пользователя если приложение уже инициализировано
-                    if (isInitialized && userData) {
-                        updateUserFromTelegram();
+                    if (isInitialized) {
+                        // Перезагружаем пользователя с новыми Telegram данными
+                        userData = getUserData(currentUserId);
+                        
+                        // Обновляем UI
                         updateProfileUI();
+                        updateCartBadge();
+                        updateFavoritesBadge();
                         
                         // Перепроверяем админские права
                         const wasAdmin = isAdmin;
@@ -4310,7 +4412,13 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                         
                         if (wasAdmin !== isAdmin) {
                             checkAndShowAdminButton();
+                            if (isAdmin) {
+                                showNotification('✅ Вы вошли как администратор');
+                            }
                         }
+                        
+                        // Сохраняем сессию
+                        saveUserSession();
                     }
                 }
                 
@@ -4320,28 +4428,42 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                     document.body.style.color = '#FFFFFF';
                 }
                 
-                // Устанавливаем кнопку админ-панели для администратора
+                // Показываем кнопку админ-панели если пользователь админ
                 if (user && (user.id.toString() === ADMIN_USER_ID || user.username === 'barizhka')) {
                     isAdmin = true;
                     checkAndShowAdminButton();
                     console.log('Telegram администратор обнаружен');
+                }
+                
+                console.log('Telegram Web App инициализирован');
+            } else {
+                console.log('Telegram Web App не обнаружен, работаем в обычном режиме');
+                
+                // Для тестирования админки
+                if (currentUserId === ADMIN_USER_ID) {
+                    isAdmin = true;
+                    checkAndShowAdminButton();
+                    console.log('Администратор по ID активирован в режиме отладки');
                 }
             }
         }
 
         // Инициализируем Telegram Web App при загрузке
         if (window.Telegram && window.Telegram.WebApp) {
+            // Запускаем инициализацию сразу
             initTelegramWebApp();
         } else {
-            // Для отладки вне Telegram
-            console.log('Telegram Web App не обнаружен, работаем в обычном режиме');
-            
-            // Для тестирования админки - добавьте свой ID вручную
-            if (currentUserId === ADMIN_USER_ID || currentUserId === '6644058285') {
-                isAdmin = true;
-                createAdminToggle();
-                console.log('Администратор по ID активирован в режиме отладки');
-            }
+            // Пробуем загрузить скрипт Telegram Web App
+            const script = document.createElement('script');
+            script.src = 'https://telegram.org/js/telegram-web-app.js';
+            script.onload = function() {
+                console.log('Telegram Web App скрипт загружен');
+                initTelegramWebApp();
+            };
+            script.onerror = function() {
+                console.log('Не удалось загрузить Telegram Web App скрипт');
+            };
+            document.head.appendChild(script);
         }
 
         // Обработка ошибок изображений
@@ -4351,6 +4473,11 @@ ${order.promoCode ? `🎫 *Промокод:* ${order.promoCode} (скидка $
                 e.target.onerror = null;
             }
         }, true);
+
+        // Сохраняем сессию при закрытии страницы
+        window.addEventListener('beforeunload', function() {
+            saveUserSession();
+        });
     </script>
 </body>
 </html>
