@@ -3398,7 +3398,29 @@ const defaultProducts = [
                 showLoading(false);
             }
         }
-
+    const gistId = localStorage.getItem('unicorn_cloud_gist_id');
+    if (gistId) {
+        try {
+            const response = await fetch(`https://api.github.com/gists/${gistId}`);
+            if (response.ok) {
+                const gist = await response.json();
+                const content = gist.files['unicorn_data.json'].content;
+                const cloudData = JSON.parse(content);
+                
+                // Обновляем данные
+                categories = cloudData.categories;
+                products = cloudData.products;
+                
+                // Сохраняем локально
+                saveCategories();
+                saveProducts();
+                
+                console.log('✅ Данные загружены из облака');
+            }
+        } catch (error) {
+            console.warn('⚠️ Не удалось загрузить из облака:', error);
+        }
+    }
         // Настройка периодической синхронизации
         function setupPeriodicSync() {
             // Проверка обновлений каждые 5 минут
