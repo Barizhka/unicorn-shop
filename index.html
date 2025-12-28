@@ -5153,28 +5153,126 @@ const defaultProducts = [
         }
 
         async function loadAllData() {
-    console.log('🚀 Загрузка 165 товаров из кода...');
+    console.log('🚀 Загрузка данных из localStorage...');
     
-    // Всегда берем данные из defaultProducts и defaultCategories
-    categories = JSON.parse(JSON.stringify(defaultCategories));
-    products = JSON.parse(JSON.stringify(defaultProducts));
-    
-    // Сохраняем в localStorage для резерва
-    saveCategories();
-    saveProducts();
-    
-    console.log(`✅ Загружено: ${products.length} товаров`);
-    console.log(`✅ Категорий: ${Object.keys(categories).length}`);
-    
-    // Показываем несколько товаров для проверки
-    if (products.length > 0) {
-        console.log('🎯 Первые 5 товаров:');
-        products.slice(0, 5).forEach(p => {
-            console.log(`   ${p.id}. ${p.name} - ${p.price}₽`);
-        });
+    try {
+        // Загружаем категории
+        const savedCategories = localStorage.getItem('unicorn_categories');
+        if (savedCategories) {
+            categories = JSON.parse(savedCategories);
+            console.log('✅ Категории загружены из localStorage');
+        } else {
+            // Инициализируем дефолтными категориями
+            categories = JSON.parse(JSON.stringify(defaultCategories));
+            saveCategories();
+            console.log('✅ Дефолтные категории загружены из кода');
+        }
+        
+        // Загружаем товары
+        const savedProducts = localStorage.getItem('unicorn_products');
+        if (savedProducts) {
+            products = JSON.parse(savedProducts);
+            console.log('✅ Товары загружены из localStorage');
+        } else {
+            // Инициализируем дефолтными товарами
+            products = JSON.parse(JSON.stringify(defaultProducts));
+            saveProducts();
+            console.log('✅ Дефолтные товары загружены из кода');
+        }
+        
+        // Загружаем промокоды
+        let promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
+        
+        // Если промокодов нет, создаем тестовый для примера
+        if (promoCodes.length === 0) {
+            promoCodes = [
+                {
+                    code: "UNICORN25",
+                    discount: 25,
+                    maxUses: 100,
+                    usedCount: 0,
+                    expires: "2026-01-01T00:00:00",
+                    isActive: true,
+                    created: new Date().toISOString()
+                },
+                {
+                    code: "WELCOME10",
+                    discount: 10,
+                    maxUses: 500,
+                    usedCount: 0,
+                    expires: null, // без срока
+                    isActive: true,
+                    created: new Date().toISOString()
+                },
+                {
+                    code: "SUMMER50",
+                    discount: 50,
+                    maxUses: 10,
+                    usedCount: 0,
+                    expires: "2025-08-31T23:59:59",
+                    isActive: true,
+                    created: new Date().toISOString()
+                }
+            ];
+            localStorage.setItem('unicorn_promocodes', JSON.stringify(promoCodes));
+            console.log('✅ Тестовые промокоды созданы');
+        } else {
+            console.log(`✅ Промокоды загружены: ${promoCodes.length} шт.`);
+        }
+        
+        // Загружаем заказы
+        let allOrders = JSON.parse(localStorage.getItem('unicorn_all_orders')) || [];
+        console.log(`✅ Заказы загружены: ${allOrders.length} шт.`);
+        
+        // Загружаем пользователей
+        const users = JSON.parse(localStorage.getItem('unicorn_users')) || {};
+        console.log(`✅ Пользователи загружены: ${Object.keys(users).length} чел.`);
+        
+        // Загружаем облачные настройки
+        cloudGistId = localStorage.getItem('unicorn_cloud_gist_id') || GITHUB_GIST_ID;
+        lastCloudSync = localStorage.getItem('unicorn_last_cloud_sync') || null;
+        
+        console.log(`🎯 Итого загружено:`);
+        console.log(`   • ${products.length} товаров`);
+        console.log(`   • ${Object.keys(categories).length} категорий`);
+        console.log(`   • ${promoCodes.length} промокодов`);
+        console.log(`   • ${allOrders.length} заказов`);
+        console.log(`   • ${Object.keys(users).length} пользователей`);
+        
+        // Показываем первые 3 товара для проверки
+        if (products.length > 0) {
+            console.log('🎯 Первые 3 товара:');
+            products.slice(0, 3).forEach(p => {
+                console.log(`   ${p.id}. ${p.name} - ${p.price}₽`);
+            });
+        }
+        
+        // Показываем активные промокоды
+        const activePromos = promoCodes.filter(p => p.isActive);
+        if (activePromos.length > 0) {
+            console.log('🎯 Активные промокоды:');
+            activePromos.forEach(p => {
+                console.log(`   ${p.code} - ${p.discount}% (осталось: ${p.maxUses - p.usedCount})`);
+            });
+        }
+        
+        return true;
+        
+    } catch (error) {
+        console.error('❌ Ошибка загрузки данных:', error);
+        
+        // Резервная загрузка из кода
+        categories = JSON.parse(JSON.stringify(defaultCategories));
+        products = JSON.parse(JSON.stringify(defaultProducts));
+        
+        // Сохраняем в localStorage
+        saveCategories();
+        saveProducts();
+        
+        console.log('🔄 Данные восстановлены из резервной копии');
+        
+        return false;
     }
-    
-    return true;
 }
 
         // Функция сохранения сессии пользователя
