@@ -2724,178 +2724,6 @@
 // ОБНОВЛЕННЫЕ ДАННЫЕ ТОВАРОВ С БОЛЬШИМ КОЛИЧЕСТВОМ И РЕАЛИСТИЧНЫМИ ОТЗЫВАМИ
 // ==============================================
 
-// ==============================================
-// ФУНКЦИИ ДЛЯ РАБОТЫ С ПРОМОКОДАМИ
-// ==============================================
-
-// Функция создания промокода через консоль
-function createPromoCodeFromConsole(code, discount, maxUses, expires = null) {
-    try {
-        let promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
-        
-        // Проверяем, не существует ли уже такой код
-        if (promoCodes.some(p => p.code === code)) {
-            console.log(`❌ Промокод ${code} уже существует`);
-            return false;
-        }
-        
-        const newPromo = {
-            code: code.toUpperCase(),
-            discount: discount,
-            maxUses: maxUses,
-            usedCount: 0,
-            expires: expires,
-            isActive: true,
-            created: new Date().toISOString(),
-            createdBy: currentUserId || 'console'
-        };
-        
-        promoCodes.push(newPromo);
-        localStorage.setItem('unicorn_promocodes', JSON.stringify(promoCodes));
-        
-        console.log(`✅ Промокод создан: ${code}`);
-        console.log(`   • Скидка: ${discount}%`);
-        console.log(`   • Макс. использований: ${maxUses}`);
-        console.log(`   • Истекает: ${expires || 'нет'}`);
-        
-        // Синхронизируем с облаком
-        if (typeof syncToCloud === 'function') {
-            syncToCloud();
-        }
-        
-        return true;
-    } catch (error) {
-        console.error('❌ Ошибка создания промокода:', error);
-        return false;
-    }
-}
-
-// Функция получения всех промокодов
-function getAllPromoCodes() {
-    try {
-        const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
-        return promoCodes;
-    } catch (error) {
-        console.error('Ошибка получения промокодов:', error);
-        return [];
-    }
-}
-
-// Функция проверки промокода
-function validatePromoCode(code) {
-    try {
-        const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
-        const promo = promoCodes.find(p => p.code === code.toUpperCase());
-        
-        if (!promo) {
-            return { valid: false, message: 'Промокод не найден' };
-        }
-        
-        if (!promo.isActive) {
-            return { valid: false, message: 'Промокод неактивен' };
-        }
-        
-        if (promo.expires && new Date(promo.expires) < new Date()) {
-            return { valid: false, message: 'Промокод истек' };
-        }
-        
-        if (promo.usedCount >= promo.maxUses) {
-            return { valid: false, message: 'Промокод использован максимальное количество раз' };
-        }
-        
-        return { 
-            valid: true, 
-            message: 'Промокод действителен',
-            discount: promo.discount,
-            promo: promo
-        };
-    } catch (error) {
-        console.error('Ошибка проверки промокода:', error);
-        return { valid: false, message: 'Ошибка проверки промокода' };
-    }
-}
-
-// Функция использования промокода
-function usePromoCode(code) {
-    try {
-        const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
-        const promoIndex = promoCodes.findIndex(p => p.code === code.toUpperCase());
-        
-        if (promoIndex === -1) {
-            return { success: false, message: 'Промокод не найден' };
-        }
-        
-        const promo = promoCodes[promoIndex];
-        
-        // Проверяем условия
-        if (!promo.isActive) {
-            return { success: false, message: 'Промокод неактивен' };
-        }
-        
-        if (promo.expires && new Date(promo.expires) < new Date()) {
-            return { success: false, message: 'Промокод истек' };
-        }
-        
-        if (promo.usedCount >= promo.maxUses) {
-            return { success: false, message: 'Лимит использований исчерпан' };
-        }
-        
-        // Увеличиваем счетчик использований
-        promoCodes[promoIndex].usedCount += 1;
-        promoCodes[promoIndex].lastUsed = new Date().toISOString();
-        
-        // Сохраняем
-        localStorage.setItem('unicorn_promocodes', JSON.stringify(promoCodes));
-        
-        console.log(`✅ Промокод ${code} использован. Теперь использований: ${promoCodes[promoIndex].usedCount}/${promo.maxUses}`);
-        
-        // Синхронизируем с облаком
-        if (typeof syncToCloud === 'function') {
-            syncToCloud();
-        }
-        
-        return { 
-            success: true, 
-            message: 'Промокод применен',
-            discount: promo.discount,
-            usedCount: promoCodes[promoIndex].usedCount,
-            maxUses: promo.maxUses
-        };
-    } catch (error) {
-        console.error('Ошибка использования промокода:', error);
-        return { success: false, message: 'Ошибка применения промокода' };
-    }
-}
-
-// Функция очистки истекших промокодов
-function clearExpiredPromoCodes() {
-    try {
-        const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
-        const now = new Date();
-        
-        const activePromos = promoCodes.filter(promo => {
-            // Оставляем только активные промокоды
-            if (!promo.isActive) return false;
-            
-            // Если есть срок истек - помечаем как неактивный вместо удаления
-            if (promo.expires && new Date(promo.expires) < now) {
-                console.log(`🕒 Промокод ${promo.code} истек (${promo.expires})`);
-                promo.isActive = false;
-                return true; // оставляем, но как неактивный
-            }
-            
-            return true;
-        });
-        
-        localStorage.setItem('unicorn_promocodes', JSON.stringify(activePromos));
-        console.log(`✅ Очищены истекшие промокоды. Осталось активных: ${activePromos.filter(p => p.isActive).length}`);
-        
-        return activePromos.filter(p => p.isActive).length;
-    } catch (error) {
-        console.error('Ошибка очистки промокодов:', error);
-        return 0;
-    }
-
 // Функция генерации реалистичных отзывов
 function generateReviews(count, averageRating, productName) {
     const reviews = [];
@@ -4896,7 +4724,175 @@ const defaultProducts = [
     },
     // ... (продолжение 10 товаров для категории аксессуаров) ...
 ];
+
+		function createPromoCodeFromConsole(code, discount, maxUses, expires = null) {
+    try {
+        let promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
         
+        // Проверяем, не существует ли уже такой код
+        if (promoCodes.some(p => p.code === code)) {
+            console.log(`❌ Промокод ${code} уже существует`);
+            return false;
+        }
+        
+        const newPromo = {
+            code: code.toUpperCase(),
+            discount: discount,
+            maxUses: maxUses,
+            usedCount: 0,
+            expires: expires,
+            isActive: true,
+            created: new Date().toISOString(),
+            createdBy: currentUserId || 'console'
+        };
+        
+        promoCodes.push(newPromo);
+        localStorage.setItem('unicorn_promocodes', JSON.stringify(promoCodes));
+        
+        console.log(`✅ Промокод создан: ${code}`);
+        console.log(`   • Скидка: ${discount}%`);
+        console.log(`   • Макс. использований: ${maxUses}`);
+        console.log(`   • Истекает: ${expires || 'нет'}`);
+        
+        // Синхронизируем с облаком
+        if (typeof syncToCloud === 'function') {
+            syncToCloud();
+        }
+        
+        return true;
+    } catch (error) {
+        console.error('❌ Ошибка создания промокода:', error);
+        return false;
+    }
+}
+
+// Функция получения всех промокодов
+        function getAllPromoCodes() {
+    try {
+        const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
+        return promoCodes;
+    } catch (error) {
+        console.error('Ошибка получения промокодов:', error);
+        return [];
+    }
+}
+
+// Функция проверки промокода
+        function validatePromoCode(code) {
+    try {
+        const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
+        const promo = promoCodes.find(p => p.code === code.toUpperCase());
+        
+        if (!promo) {
+            return { valid: false, message: 'Промокод не найден' };
+        }
+        
+        if (!promo.isActive) {
+            return { valid: false, message: 'Промокод неактивен' };
+        }
+        
+        if (promo.expires && new Date(promo.expires) < new Date()) {
+            return { valid: false, message: 'Промокод истек' };
+        }
+        
+        if (promo.usedCount >= promo.maxUses) {
+            return { valid: false, message: 'Промокод использован максимальное количество раз' };
+        }
+        
+        return { 
+            valid: true, 
+            message: 'Промокод действителен',
+            discount: promo.discount,
+            promo: promo
+        };
+    } catch (error) {
+        console.error('Ошибка проверки промокода:', error);
+        return { valid: false, message: 'Ошибка проверки промокода' };
+    }
+}
+
+// Функция использования промокода
+        function usePromoCode(code) {
+    try {
+        const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
+        const promoIndex = promoCodes.findIndex(p => p.code === code.toUpperCase());
+        
+        if (promoIndex === -1) {
+            return { success: false, message: 'Промокод не найден' };
+        }
+        
+        const promo = promoCodes[promoIndex];
+        
+        // Проверяем условия
+        if (!promo.isActive) {
+            return { success: false, message: 'Промокод неактивен' };
+        }
+        
+        if (promo.expires && new Date(promo.expires) < new Date()) {
+            return { success: false, message: 'Промокод истек' };
+        }
+        
+        if (promo.usedCount >= promo.maxUses) {
+            return { success: false, message: 'Лимит использований исчерпан' };
+        }
+        
+        // Увеличиваем счетчик использований
+        promoCodes[promoIndex].usedCount += 1;
+        promoCodes[promoIndex].lastUsed = new Date().toISOString();
+        
+        // Сохраняем
+        localStorage.setItem('unicorn_promocodes', JSON.stringify(promoCodes));
+        
+        console.log(`✅ Промокод ${code} использован. Теперь использований: ${promoCodes[promoIndex].usedCount}/${promo.maxUses}`);
+        
+        // Синхронизируем с облаком
+        if (typeof syncToCloud === 'function') {
+            syncToCloud();
+        }
+        
+        return { 
+            success: true, 
+            message: 'Промокод применен',
+            discount: promo.discount,
+            usedCount: promoCodes[promoIndex].usedCount,
+            maxUses: promo.maxUses
+        };
+    } catch (error) {
+        console.error('Ошибка использования промокода:', error);
+        return { success: false, message: 'Ошибка применения промокода' };
+    }
+}
+
+// Функция очистки истекших промокодов
+        function clearExpiredPromoCodes() {
+    try {
+        const promoCodes = JSON.parse(localStorage.getItem('unicorn_promocodes')) || [];
+        const now = new Date();
+        
+        const activePromos = promoCodes.filter(promo => {
+            // Оставляем только активные промокоды
+            if (!promo.isActive) return false;
+            
+            // Если есть срок истек - помечаем как неактивный вместо удаления
+            if (promo.expires && new Date(promo.expires) < now) {
+                console.log(`🕒 Промокод ${promo.code} истек (${promo.expires})`);
+                promo.isActive = false;
+                return true; // оставляем, но как неактивный
+            }
+            
+            return true;
+        });
+        
+        localStorage.setItem('unicorn_promocodes', JSON.stringify(activePromos));
+        console.log(`✅ Очищены истекшие промокоды. Осталось активных: ${activePromos.filter(p => p.isActive).length}`);
+        
+        return activePromos.filter(p => p.isActive).length;
+    } catch (error) {
+        console.error('Ошибка очистки промокодов:', error);
+        return 0;
+    }
+}
+
         // Application state
         let categories = {};
         let products = [];
